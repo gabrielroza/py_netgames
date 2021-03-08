@@ -28,8 +28,7 @@ class Server:
 
     def start_match(self, message: MatchStartMessage, websocket: WebSocketServerProtocol):
         try:
-            existing_match = next(
-                match for match in self.__matches if match.accepting_players(message.game) and message)
+            existing_match = next(match for match in self.__matches if match.accepting_players(message.game))
             self.__matches.remove(existing_match)
             match = dataclasses.replace(existing_match, players=frozenset([*existing_match.players, websocket]))
             self.__matches.add(match)
