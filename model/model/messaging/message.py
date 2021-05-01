@@ -2,6 +2,7 @@ import abc
 from abc import ABC
 from dataclasses import dataclass
 from typing import Dict, Any
+from uuid import UUID
 
 from dataclasses_json import dataclass_json
 
@@ -41,6 +42,7 @@ class MatchRequestMessage(Message):
 @dataclass_json
 @dataclass
 class MatchStartedMessage(Message):
+    match_id: UUID
     position: int
 
     def type(self) -> WebhookPayloadType:
@@ -48,3 +50,16 @@ class MatchStartedMessage(Message):
 
     def to_dict(self) -> str:
         return MatchStartedMessage.to_dict(self)
+
+
+@dataclass_json
+@dataclass
+class MoveMessage(Message):
+    match_id: UUID
+    payload: any
+
+    def type(self) -> WebhookPayloadType:
+        return WebhookPayloadType.MOVE
+
+    def to_dict(self) -> str:
+        return MoveMessage.to_dict(self)

@@ -8,6 +8,7 @@ from dataclasses_json import dataclass_json
 class WebhookPayloadType(Enum):
     MATCH_REQUEST = 'MATCH_REQUEST'
     MATCH_STARTED = 'MATCH_STARTED'
+    MOVE = 'MOVE'
 
 
 @dataclass_json

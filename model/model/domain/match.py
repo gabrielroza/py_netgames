@@ -1,24 +1,17 @@
 from dataclasses import dataclass, field
 from typing import FrozenSet
+from uuid import UUID, uuid4
 
 from websockets import WebSocketServerProtocol
 
 from model.domain.game import Game
 from model.messaging.message import MatchRequestMessage
 
-__acc = 0
-
-
-def _get_id():
-    global __acc
-    __acc += 1
-    return __acc
-
 
 @dataclass(eq=True, frozen=True)
 class Match:
     game: Game
-    id: int = field(default_factory=_get_id)
+    id: UUID = field(default_factory=uuid4)
     amount_of_players: int = field(default_factory=2)
     players: FrozenSet[WebSocketServerProtocol] = field(default_factory=frozenset)
 
