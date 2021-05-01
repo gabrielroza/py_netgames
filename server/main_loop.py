@@ -1,7 +1,7 @@
 import asyncio
 
 import websockets
-from websockets import WebSocketServerProtocol
+from websockets import WebSocketServerProtocol, ConnectionClosedError
 
 from model.messaging.deserializer import WebhookPayloadDeserializer
 from server import Server
@@ -20,6 +20,10 @@ class MainLoop:
         asyncio.get_event_loop().run_until_complete(game_server)
         asyncio.get_event_loop().run_forever()
 
-    async def listen(self, websocket: WebSocketServerProtocol, path: str):
-        async for message in websocket:
-            await self.__server.handle(self.__deserializer.deserialize(message), websocket)
+    async def listen(self, websocket: WebSocketServerProtocol, _: str):
+        try:
+            async for message in websocket:
+                await self.__server.handle_message(self.__deserializer.deserialize(message), websocket)
+        except ConnectionClosedError:
+            await self.__server.handle_disconnect(websocket)
+            print(f"Disconnected {websocket}")

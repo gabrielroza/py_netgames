@@ -20,8 +20,15 @@ class Server:
             MoveMessage: self.__move
         }
 
-    async def handle(self, message: Message, sender: WebSocketServerProtocol):
+    async def handle_message(self, message: Message, sender: WebSocketServerProtocol):
         await self.__handle_map[message.__class__](message, sender)
+
+    async def handle_disconnect(self, disconnected_socket: WebSocketServerProtocol):
+        try:
+            match = next(match for match in self.__matches if disconnected_socket in match.players)
+            [await websocket.close(reason="Player disconnected") for websocket in match.players - {disconnected_socket}]
+        except StopIteration:
+            print(f"No match found for websocket {disconnected_socket}")
 
     async def __start_match(self, message: MatchRequestMessage, sender: WebSocketServerProtocol):
         try:
