@@ -6,7 +6,8 @@ from dataclasses_json import dataclass_json
 
 
 class WebhookPayloadType(Enum):
-    MATCH_START = 'MATCH_START'
+    MATCH_REQUEST = 'MATCH_REQUEST'
+    MATCH_STARTED = 'MATCH_STARTED'
 
 
 @dataclass_json
@@ -14,3 +15,6 @@ class WebhookPayloadType(Enum):
 class WebhookPayload:
     type: WebhookPayloadType
     message: Dict[str, Any]
+
+    def to_json(self) -> str:
+        return WebhookPayload.to_json(self)

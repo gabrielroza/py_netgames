@@ -22,4 +22,4 @@ class MainLoop:
 
     async def listen(self, websocket: WebSocketServerProtocol, path: str):
         async for message in websocket:
-            self.__server.handle(self.__deserializer.deserialize(message), websocket)
+            await self.__server.handle(self.__deserializer.deserialize(message), websocket)

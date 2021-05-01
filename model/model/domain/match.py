@@ -4,7 +4,7 @@ from typing import FrozenSet
 from websockets import WebSocketServerProtocol
 
 from model.domain.game import Game
-from model.messaging.message import MatchStartMessage
+from model.messaging.message import MatchRequestMessage
 
 __acc = 0
 
@@ -23,7 +23,7 @@ class Match:
     players: FrozenSet[WebSocketServerProtocol] = field(default_factory=frozenset)
 
     @classmethod
-    def create(cls, message: MatchStartMessage, websocket: WebSocketServerProtocol):
+    def create(cls, message: MatchRequestMessage, websocket: WebSocketServerProtocol):
         return Match(game=message.game, amount_of_players=message.amount_of_players, players=frozenset([websocket]))
 
     def accepting_players(self, game: Game) -> bool:

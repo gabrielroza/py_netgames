@@ -1,6 +1,6 @@
 from typing import Dict, Callable, Any
 
-from model.messaging.message import Message, MatchStartMessage
+from model.messaging.message import Message, MatchRequestMessage, MatchStartedMessage
 from model.messaging.webhook_payload import WebhookPayload, WebhookPayloadType
 
 
@@ -9,7 +9,8 @@ class WebhookPayloadDeserializer:
 
     def __init__(self):
         self.__deserialization_table = {
-            WebhookPayloadType.MATCH_START: MatchStartMessage.from_dict
+            WebhookPayloadType.MATCH_REQUEST: MatchRequestMessage.from_dict,
+            WebhookPayloadType.MATCH_STARTED: MatchStartedMessage.from_dict
         }
 
     def deserialize(self, message) -> Message:
