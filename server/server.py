@@ -27,6 +27,7 @@ class Server:
         try:
             match = next(match for match in self.__matches if disconnected_socket in match.players)
             [await websocket.close(reason="Player disconnected") for websocket in match.players - {disconnected_socket}]
+            self.__matches.remove(match)
         except StopIteration:
             print(f"No match found for websocket {disconnected_socket}")
 
