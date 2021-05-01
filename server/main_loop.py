@@ -4,7 +4,7 @@ import websockets
 from websockets import WebSocketServerProtocol
 
 from model.messaging.deserializer import WebhookPayloadDeserializer
-from model.messaging.server import Server
+from server import Server
 
 
 class MainLoop:
@@ -16,6 +16,7 @@ class MainLoop:
         self.__deserializer = WebhookPayloadDeserializer()
         self.__server = Server()
         game_server = websockets.serve(self.listen, "localhost", 8765)
+        print("Listening...")
         asyncio.get_event_loop().run_until_complete(game_server)
         asyncio.get_event_loop().run_forever()
 

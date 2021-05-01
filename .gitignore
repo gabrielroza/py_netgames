@@ -1,2 +1,6 @@
-.idea/
-__pycache__/
+model/.idea/
+model/__pycache__/
+server/.idea/
+server/__pycache__/
+client/.idea/
+client/__pycache__/

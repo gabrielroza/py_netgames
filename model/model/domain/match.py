@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Set, FrozenSet
+from typing import FrozenSet
 
 from websockets import WebSocketServerProtocol
 
