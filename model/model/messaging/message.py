@@ -15,11 +15,11 @@ class Message(ABC):
 
     @abc.abstractmethod
     def to_dict(self) -> Dict[str, Any]:
-        pass
+        raise NotImplementedError()
 
     @abc.abstractmethod
     def type(self) -> WebhookPayloadType:
-        pass
+        raise NotImplementedError()
 
     def to_payload(self) -> WebhookPayload:
         return WebhookPayload(self.type(), self.to_dict())
