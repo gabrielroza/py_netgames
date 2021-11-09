@@ -38,7 +38,7 @@ class Server:
             match = dataclasses.replace(existing_match, players=frozenset([*existing_match.players, sender]))
             self.__matches.add(match)
             if not match.accepting_players(message.game):
-                [await self.send(MatchStartedMessage(match.id, position), {websocket}) for position, websocket in
+                [await self.__send(MatchStartedMessage(match.id, position), {websocket}) for position, websocket in
                  enumerate(match.players)]
         except StopIteration:
             match = Match.create(message, sender)
@@ -47,10 +47,9 @@ class Server:
     async def __move(self, message: MoveMessage, sender: WebSocketServerProtocol):
         try:
             match = next(match for match in self.__matches if match.id == message.match_id)
-            await self.send(message, match.players - {sender})
+            await self.__send(message, match.players - {sender})
         except StopIteration:
             print(f"Match not found {message.match_id}")
 
-    @staticmethod
-    async def send(message: Message, recipients: [WebSocketServerProtocol]):
+    async def __send(self, message: Message, recipients: [WebSocketServerProtocol]):
         [await websocket.send(message.to_payload().to_json()) for websocket in recipients]

@@ -6,7 +6,6 @@ from uuid import UUID
 
 from dataclasses_json import dataclass_json
 
-from model.domain.game import Game
 from model.messaging.webhook_payload import WebhookPayloadType, WebhookPayload
 
 
@@ -29,7 +28,7 @@ class Message(ABC):
 @dataclass
 class MatchRequestMessage(Message):
     player_name: str
-    game: Game
+    game_id: UUID
     amount_of_players: int
 
     def type(self) -> WebhookPayloadType:
