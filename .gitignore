@@ -4,3 +4,5 @@ server/.idea/
 server/__pycache__/
 client/.idea/
 client/__pycache__/
+sample/.idea/
+sample/__pycache__/
