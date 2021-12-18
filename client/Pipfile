@@ -7,8 +7,8 @@ name = "pypi"
 websockets = "*"
 asgiref = "*"
 
-[dev-packages]
-model = {path = "./../model"}
-
 [requires]
 python_version = "3.8"
+
+[dev-packages.model]
+path = "./../model"
