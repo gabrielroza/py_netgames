@@ -1,6 +1,6 @@
 from setuptools import setup, find_namespace_packages
 
-setup(name='Model',
+setup(name='model',
       version='1.0',
       description='Model',
       author='Gabriel Machado',
