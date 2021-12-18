@@ -5,10 +5,11 @@ name = "pypi"
 
 [packages]
 pygame = "==2.0.1"
-
-[dev-packages]
-client = {path = "./../client"}
-
+websockets = "*"
+asgiref = "*"
 
 [requires]
 python_version = "3.8"
+
+[dev-packages]
+client = {path = "./../client"}

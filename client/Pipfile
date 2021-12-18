@@ -4,8 +4,11 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+websockets = "*"
+asgiref = "*"
 
 [dev-packages]
+model = {path = "./../model"}
 
 [requires]
 python_version = "3.8"
