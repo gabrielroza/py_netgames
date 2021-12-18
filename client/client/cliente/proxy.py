@@ -1,5 +1,6 @@
 import websockets
 from asgiref.sync import async_to_sync
+from model.messaging.message import MatchRequestMessage
 from websockets import WebSocketServerProtocol
 
 from client.cliente.listener import Listener
@@ -11,14 +12,13 @@ class Proxy:
 
     def __init__(self, listeners: [Listener]) -> None:
         super().__init__()
-        print("eae")
         self.__listeners = listeners
 
     @async_to_sync
     async def connect(self, address: str):
-        async with websockets.connect("ws://" + address) as websocket:
-            self.__websocket = websocket
+        print("connecting...")
+        self.__websocket = await websockets.connect("ws://" + address)
 
     @async_to_sync
-    async def send(self, payload: any):
+    async def request_match(self, payload: MatchRequestMessage):
         await self.__websocket.send(payload)
