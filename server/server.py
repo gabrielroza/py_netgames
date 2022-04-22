@@ -1,9 +1,10 @@
 import dataclasses
 from typing import Type, Dict, Callable, TypeVar, Set, Awaitable
 
-from model.domain.match import Match
 from model.messaging.message import MatchRequestMessage, Message, MatchStartedMessage, MoveMessage
 from websockets import WebSocketServerProtocol
+
+from match import Match
 
 T = TypeVar('T', bound=Message)
 
@@ -33,11 +34,11 @@ class Server:
 
     async def __start_match(self, message: MatchRequestMessage, sender: WebSocketServerProtocol):
         try:
-            existing_match = next(match for match in self.__matches if match.accepting_players(message.game))
+            existing_match = next(match for match in self.__matches if match.accepting_players(message.game_id))
             self.__matches.remove(existing_match)
             match = dataclasses.replace(existing_match, players=frozenset([*existing_match.players, sender]))
             self.__matches.add(match)
-            if not match.accepting_players(message.game):
+            if not match.accepting_players(message.game_id):
                 [await self.__send(MatchStartedMessage(match.id, position), {websocket}) for position, websocket in
                  enumerate(match.players)]
         except StopIteration:
