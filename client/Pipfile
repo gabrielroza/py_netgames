@@ -4,8 +4,8 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-websockets = "*"
-asgiref = "*"
+websocket-client = "*"
+rel = "*"
 
 [requires]
 python_version = "3.8"

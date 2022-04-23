@@ -1,9 +1,10 @@
-import abc
 from abc import ABC
 
 
 class Listener(ABC):
 
-    @abc.abstractmethod
+    def match_started(self, position: int):
+        raise NotImplementedError()
+
     def receive_move(self, payload: any):
         raise NotImplementedError()

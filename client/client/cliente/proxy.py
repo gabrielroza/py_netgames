@@ -1,24 +1,57 @@
-import websockets
-from asgiref.sync import async_to_sync
+from uuid import UUID
+
+import rel as rel
+import websocket
 from model.messaging.message import MatchRequestMessage
-from websockets import WebSocketServerProtocol
+from websocket import WebSocketApp
 
 from client.cliente.listener import Listener
 
 
+def on_message(ws, message):
+    print(message)
+
+
+def on_error(ws, error):
+    print(error)
+
+
+def on_close(ws, close_status_code, close_msg):
+    print("### closed ###")
+
+
+def on_open(ws):
+    print("Opened connection")
+
+
 class Proxy:
-    __websocket: WebSocketServerProtocol
-    __listeners: [Listener]
+    __listener: Listener
+    __websocket: WebSocketApp
 
-    def __init__(self, listeners: [Listener]) -> None:
+    def __init__(self, listener: Listener) -> None:
         super().__init__()
-        self.__listeners = listeners
+        self.__listener = listener
 
-    @async_to_sync
-    async def connect(self, address: str):
-        print("connecting...")
-        self.__websocket = await websockets.connect("ws://" + address)
+    def connect(self, address: str):
+        self.__websocket = websocket.WebSocketApp(f"ws://{address}",
+                                                  on_open=on_open,
+                                                  on_message=on_message,
+                                                  on_error=on_error,
+                                                  on_close=on_close)
+        self.__websocket.run_forever(dispatcher=rel)
+        rel.signal(2, rel.abort)
+        rel.dispatch()
 
-    @async_to_sync
-    async def request_match(self, payload: MatchRequestMessage):
-        await self.__websocket.send(payload)
+    def request_match(self, player_name: str, game_id: UUID, amount_of_players: int):
+        payload = MatchRequestMessage(player_name, game_id, amount_of_players).to_payload().to_json()
+        print(payload)
+        self.__websocket.send(payload)
+
+    def send_move(self, payload: any):
+        raise NotImplementedError()
+
+    def disconnect(self):
+        raise NotImplementedError()
+
+    def end_match(self):
+        raise NotImplementedError()
