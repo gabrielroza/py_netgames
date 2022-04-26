@@ -1,4 +1,6 @@
 import dataclasses
+import logging
+from logging import Logger
 from typing import Type, Dict, Callable, TypeVar, Set, Awaitable
 
 from model.messaging.message import MatchRequestMessage, Message, MatchStartedMessage, MoveMessage
@@ -12,6 +14,7 @@ T = TypeVar('T', bound=Message)
 class Server:
     __matches: Set[Match]
     __handle_map: Dict[Type[T], Callable[[T, WebSocketServerProtocol], Awaitable[None]]]
+    __logger: Logger
 
     def __init__(self):
         super().__init__()
@@ -20,6 +23,7 @@ class Server:
             MatchRequestMessage: self.__start_match,
             MoveMessage: self.__move
         }
+        self.__logger = logging.getLogger("server.Server")
 
     async def handle_message(self, message: Message, sender: WebSocketServerProtocol):
         await self.__handle_map[message.__class__](message, sender)
@@ -29,8 +33,9 @@ class Server:
             match = next(match for match in self.__matches if disconnected_socket in match.players)
             [await websocket.close(reason="Player disconnected") for websocket in match.players - {disconnected_socket}]
             self.__matches.remove(match)
+            self.__logger.info(f"Dropped match with {len(match.players)} connections after player disconnected.")
         except StopIteration:
-            print(f"No match found for websocket {disconnected_socket}")
+            self.__logger.error(f"No match found for disconnected websocket.")
 
     async def __start_match(self, message: MatchRequestMessage, sender: WebSocketServerProtocol):
         try:
@@ -50,7 +55,7 @@ class Server:
             match = next(match for match in self.__matches if match.id == message.match_id)
             await self.__send(message, match.players - {sender})
         except StopIteration:
-            print(f"Match not found {message.match_id}")
+            self.__logger.error(f"Match not found for match_id {message.match_id}")
 
     async def __send(self, message: Message, recipients: [WebSocketServerProtocol]):
         [await websocket.send(message.to_payload().to_json()) for websocket in recipients]
