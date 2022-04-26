@@ -9,25 +9,25 @@ from server import Server
 
 
 class MainLoop:
-    __deserializer: WebhookPayloadDeserializer
-    __server: Server
-    __logger: logging.Logger
+    _deserializer: WebhookPayloadDeserializer
+    _server: Server
+    _logger: logging.Logger
 
     def __init__(self) -> None:
         super().__init__()
         port = 8765
-        self.__deserializer = WebhookPayloadDeserializer()
-        self.__server = Server()
-        self.__logger = logging.getLogger("server.MainLoop")
+        self._deserializer = WebhookPayloadDeserializer()
+        self._server = Server()
+        self._logger = logging.getLogger("server.MainLoop")
         game_server = websockets.serve(self.listen, "localhost", port)
         asyncio.get_event_loop().run_until_complete(game_server)
-        self.__logger.info(f"Server listening at port {port}")
+        self._logger.info(f"Server listening at port {port}")
         asyncio.get_event_loop().run_forever()
 
     async def listen(self, websocket: WebSocketServerProtocol, _: str):
         try:
             async for message in websocket:
-                self.__logger.info(f"Message received: {message}")
-                await self.__server.handle_message(self.__deserializer.deserialize(message), websocket)
+                self._logger.info(f"Message received: {message}")
+                await self._server.handle_message(self._deserializer.deserialize(message), websocket)
         except ConnectionClosedError:
-            await self.__server.handle_disconnect(websocket)
+            await self._server.handle_disconnect(websocket)
