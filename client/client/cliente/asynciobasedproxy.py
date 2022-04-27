@@ -1,5 +1,4 @@
 import abc
-import asyncio
 import logging
 from abc import ABC
 from logging import Logger
@@ -13,14 +12,14 @@ from websockets import WebSocketServerProtocol
 
 
 class AsyncIoBasedProxy(ABC):
-    _websocket: WebSocketServerProtocol
-    _logger: Logger
-    _deserializer: WebhookPayloadDeserializer
+    __websocket: WebSocketServerProtocol
+    __logger: Logger
+    __deserializer: WebhookPayloadDeserializer
 
     def __init__(self) -> None:
         super().__init__()
-        self._logger = logging.getLogger("cliente.Proxy")
-        self._deserializer = WebhookPayloadDeserializer()
+        self.__logger = logging.getLogger("cliente.Proxy")
+        self.__deserializer = WebhookPayloadDeserializer()
 
     @abc.abstractmethod
     async def _match_started(self, position: int):
@@ -31,13 +30,13 @@ class AsyncIoBasedProxy(ABC):
         raise NotImplementedError()
 
     async def connect(self, address: str):
-        self._websocket = await websockets.connect("ws://" + address)
-        self._logger.info("Connected to server")
+        self.__websocket = await websockets.connect("ws://" + address)
+        self.__logger.info("Connected to server")
 
     async def listen(self):
-        async for message in self._websocket:
-            self._logger.info(f"Message received: {message}")
-            message = self._deserializer.deserialize(message)
+        async for message in self.__websocket:
+            self.__logger.info(f"Message received: {message}")
+            message = self.__deserializer.deserialize(message)
             if WebhookPayloadType.MATCH_STARTED == message.type():
                 await self._match_started(message.position)
             elif WebhookPayloadType.MOVE == message.type():
@@ -52,12 +51,12 @@ class AsyncIoBasedProxy(ABC):
         await self._send_message(payload)
 
     async def disconnect(self):
-        await self._websocket.disconnect()
-        self._logger.info("Connection severed")
+        await self.__websocket.disconnect()
+        self.__logger.info("Connection severed")
 
     async def end_match(self):
         await self.disconnect()
 
     async def _send_message(self, message: str):
-        await self._websocket.send(message)
-        self._logger.info(f"Message sent: {message}")
+        await self.__websocket.send(message)
+        self.__logger.info(f"Message sent: {message}")

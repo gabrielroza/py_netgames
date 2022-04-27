@@ -11,6 +11,7 @@ class Actor(AsyncIoBasedProxy):
 
     def __init__(self) -> None:
         super().__init__()
+        self._logger = logging.getLogger("cliente.Actor")
 
     async def _match_started(self, position: int):
         self._logger.info(f"Match started with position {position}")
