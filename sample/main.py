@@ -1,7 +1,8 @@
-from client.cliente.proxy import Proxy
-
-from send_receive.move_listener import MoveListener
+from ChallengeFactory import ChallengeFactory
 
 if __name__ == '__main__':
-    listeners = [MoveListener()]
-    Proxy(listeners).connect("localhost:")
+    factory = ChallengeFactory()
+    print(factory.get_challenge())
+    print(factory.get_challenge())
+    print(factory.get_challenge())
+    print(factory.get_challenge())
