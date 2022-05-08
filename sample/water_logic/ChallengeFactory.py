@@ -1,4 +1,5 @@
-from water_logic import Challenge, Jar
+from water_logic.Challenge import Challenge
+from water_logic.Jar import Jar
 
 
 class ChallengeFactory:

@@ -1,14 +1,7 @@
 from dataclasses import dataclass, field
-from enum import Enum
 from typing import Optional
 
 from dataclasses_json import dataclass_json
-
-
-class ChallengeState(Enum):
-    SUCCESS = 'SUCCESS'
-    FAILURE = 'FAILURE'
-    IN_PROGRESS = 'IN_PROGRESS'
 
 
 @dataclass_json
@@ -52,14 +45,3 @@ class Jar:
             destination.fill = destination.fill + self.fill
             self.fill = 0
         return True
-
-
-@dataclass_json
-@dataclass
-class Challenge:
-    left_jar: Jar
-    right_jar: Jar
-    maximum_steps: int
-    description: str
-    used_steps: int = field(default=0)
-    state: ChallengeState = field(default=ChallengeState.IN_PROGRESS)

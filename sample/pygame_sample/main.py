@@ -1,4 +1,4 @@
-from ChallengeFactory import ChallengeFactory
+from water_logic.ChallengeFactory import ChallengeFactory
 
 if __name__ == '__main__':
     factory = ChallengeFactory()
