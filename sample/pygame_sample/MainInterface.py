@@ -23,7 +23,7 @@ class MainInterface:
             self._build_main_menu().mainloop(self._surface)
 
     def _build_main_menu(self):
-        main_menu = pygame_menu.Menu('Water Logic', 1024, 1080, theme=pygame_menu.themes.THEME_BLUE)
+        main_menu = pygame_menu.Menu('TicTacToe', 1024, 1080, theme=pygame_menu.themes.THEME_BLUE)
         main_menu.add.text_input('Server address: ', default='localhost:8765', textinput_id='address')
         main_menu.select_widget(main_menu.add.button('Connect', self._connect))
         main_menu.add.button('Quit', pygame_menu.events.EXIT)
