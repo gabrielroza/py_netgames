@@ -3,14 +3,14 @@ import threading
 from asyncio import AbstractEventLoop
 
 import pygame
-import websockets
+from websockets import client, WebSocketClientProtocol
 
 CONNECTED = pygame.event.custom_type()
 
 
 class PygameWebsocketProxy:
     _loop: AbstractEventLoop
-    _websocket: websockets.WebSocketServerProtocol
+    _websocket: WebSocketClientProtocol
 
     def __init__(self) -> None:
         super().__init__()
@@ -19,7 +19,7 @@ class PygameWebsocketProxy:
 
     def connect(self, address: str) -> None:
         async def async_connect():
-            self._websocket = await websockets.connect("ws://" + address)
+            self._websocket = await client.connect("ws://" + address)
             print(self._websocket)
             print(pygame)
             return pygame.event.post(pygame.event.Event(CONNECTED, message={}))
