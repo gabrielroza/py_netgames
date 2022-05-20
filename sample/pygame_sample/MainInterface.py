@@ -2,7 +2,7 @@ import pygame
 import pygame_menu
 from pygame_menu import Menu
 
-from pygame_sample.PygameWebsocketProxy import PygameWebsocketProxy, CONNECTED
+from pygame_sample.PygameWebsocketProxy import PygameWebsocketProxy, CONNECTED, RECEIVED
 
 
 class MainInterface:
@@ -26,6 +26,10 @@ class MainInterface:
                     exit()
                 elif event.type == CONNECTED:
                     print("CONNECTED!!!")
+                    self._websocket.send("{}")
+                    self._websocket.listen()
+                elif event.type == RECEIVED:
+                    print(f"received {event.message}")
 
             if self._main_menu.is_enabled():
                 self._main_menu.update(events)
