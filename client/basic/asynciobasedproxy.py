@@ -18,7 +18,7 @@ class AsyncIoBasedProxy(ABC):
 
     def __init__(self) -> None:
         super().__init__()
-        self.__logger = logging.getLogger("cliente.Proxy")
+        self.__logger = logging.getLogger("basic.Proxy")
         self.__deserializer = WebhookPayloadDeserializer()
 
     @abc.abstractmethod

@@ -3,7 +3,7 @@ import logging
 import sys
 import uuid
 
-from client.cliente.asynciobasedproxy import AsyncIoBasedProxy
+from basic.asynciobasedproxy import AsyncIoBasedProxy
 
 
 class Actor(AsyncIoBasedProxy):
@@ -11,7 +11,7 @@ class Actor(AsyncIoBasedProxy):
 
     def __init__(self) -> None:
         super().__init__()
-        self._logger = logging.getLogger("cliente.Actor")
+        self._logger = logging.getLogger("basic.Actor")
 
     async def _match_started(self, position: int):
         self._logger.info(f"Match started with position {position}")
