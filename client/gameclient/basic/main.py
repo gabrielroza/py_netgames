@@ -3,7 +3,7 @@ import logging
 import sys
 import uuid
 
-from basic.asynciobasedproxy import AsyncIoBasedProxy
+from gameclient.basic.asynciobasedproxy import AsyncIoBasedProxy
 
 
 class Actor(AsyncIoBasedProxy):

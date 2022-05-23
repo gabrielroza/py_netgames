@@ -2,7 +2,7 @@ import pygame
 import pygame_menu
 from pygame_menu import Menu
 
-from pygame_sample.PygameWebsocketProxy import PygameWebsocketProxy, CONNECTED, RECEIVED
+from gameclient.pygameclient.PygameWebsocketProxy import PygameWebsocketProxy, CONNECTED, RECEIVED
 
 
 class MainInterface:
