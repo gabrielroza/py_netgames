@@ -4,6 +4,8 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+websockets="*"
+dataclasses-json="*"
 
 [dev-packages]
 model = {path = "./../model"}
