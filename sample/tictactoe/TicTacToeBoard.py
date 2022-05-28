@@ -1,12 +1,12 @@
 import itertools
-from typing import Optional, Tuple
+from typing import Optional, Tuple, List
 
 from tictactoe.StalemateException import StalemateException
 from tictactoe.TicTacToeMark import TicTacToeMark
 
 
 class TicTacToeBoard:
-    _board: [Optional[TicTacToeMark], Optional[TicTacToeMark]]
+    _board: List[List[Optional[TicTacToeMark]]]
 
     def __init__(self) -> None:
         self._board = [
@@ -43,7 +43,7 @@ class TicTacToeBoard:
             values = (self._board[position[0]][position[1]] for position in coordinates)
             marks = [mark for mark in values if mark is not None]
             complete = len(marks) == 3 and len(set(marks)) == 1
-            return self._board[coordinates[0][0]][coordinates[0][1]] if complete else None
+            return marks[0] if complete else None
 
         try:
             lane_winning_symbols = (get_winning_symbol(lane) for lane in winning_coordinates)
