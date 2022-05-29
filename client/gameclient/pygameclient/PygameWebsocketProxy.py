@@ -42,7 +42,7 @@ class PygameWebsocketProxy:
                 self._websocket = await client.connect("ws://" + address)
                 return pygame.event.post(pygame.event.Event(CONNECTED, message={}))
             except Exception as e:
-                return pygame.event.post(pygame.event.Event(CONNECTION_ERROR, message={'exception': e}))
+                return pygame.event.post(pygame.event.Event(CONNECTION_ERROR, message=e))
 
         self._run(target=async_connect)
 
@@ -57,7 +57,7 @@ class PygameWebsocketProxy:
             try:
                 await self._websocket.send(message)
             except Exception as e:
-                return pygame.event.post(pygame.event.Event(CONNECTION_ERROR, message={'exception': e}))
+                return pygame.event.post(pygame.event.Event(CONNECTION_ERROR, message=e))
 
         self._run(target=async_send)
 
@@ -71,7 +71,7 @@ class PygameWebsocketProxy:
                     elif WebhookPayloadType.MOVE == message.type():
                         pygame.event.post(pygame.event.Event(MOVE, message=message.payload))
             except Exception as e:
-                return pygame.event.post(pygame.event.Event(CONNECTION_ERROR, message={'exception': e}))
+                return pygame.event.post(pygame.event.Event(CONNECTION_ERROR, message=e))
 
         self._run(target=async_listen)
 
