@@ -51,7 +51,7 @@ class AsyncIoBasedProxy(ABC):
         await self._send_message(payload)
 
     async def disconnect(self):
-        await self.__websocket.disconnect()
+        await self.__websocket.close()
         self.__logger.info("Connection severed")
 
     async def end_match(self):

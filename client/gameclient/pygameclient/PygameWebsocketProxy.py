@@ -15,6 +15,7 @@ CONNECTION_ERROR = pygame.event.custom_type()
 RECEIVED = pygame.event.custom_type()
 MATCH_STARTED = pygame.event.custom_type()
 MOVE = pygame.event.custom_type()
+DISCONNECT = pygame.event.custom_type()
 
 
 class PygameWebsocketProxy:
@@ -45,6 +46,16 @@ class PygameWebsocketProxy:
                 return pygame.event.post(pygame.event.Event(CONNECTION_ERROR, message=e))
 
         self._run(target=async_connect)
+
+    def disconnect(self) -> None:
+        async def async_disconnect():
+            try:
+                self._websocket.close()
+                return pygame.event.post(pygame.event.Event(DISCONNECT, message={}))
+            except Exception as e:
+                return pygame.event.post(pygame.event.Event(CONNECTION_ERROR, message=e))
+
+        self._run(target=async_disconnect)
 
     def request_match(self, player_name: str, game_id: UUID, amount_of_players: int):
         self._send(MatchRequestMessage(player_name, game_id, amount_of_players).to_payload().to_json())

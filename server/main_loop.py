@@ -29,5 +29,7 @@ class MainLoop:
             async for message in websocket:
                 self._logger.info(f"Message received: {message}")
                 await self._server.handle_message(self._deserializer.deserialize(message), websocket)
-        except ConnectionClosedError:
+            await self._server.handle_disconnect(websocket)
+        except ConnectionClosedError as error:
+            self._logger.error(f'ConnectionClosedError when listening: {error}')
             await self._server.handle_disconnect(websocket)
