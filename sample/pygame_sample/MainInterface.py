@@ -90,7 +90,7 @@ class MainInterface:
                               state_values=('Request', 'Awaiting players'),
                               state_color=((178, 178, 178), (206, 144, 0)),
                               state_text_font_color=((255, 255, 255), (255, 255, 255)),
-                              state_width=150,
+                              state_width=270,
                               state_text=('Request', 'Awaiting players'),
                               onchange=self._request_match)
         switch.readonly = True
@@ -110,4 +110,8 @@ class MainInterface:
         if state == 'Request':
             raise NotImplementedError()
         elif state == 'Awaiting players':
-            self._websocket.request_match(self._main_menu.get_widget('name').get_value(), self._game_id, 2)
+            self._websocket.request_match(
+                player_name=self._main_menu.get_widget('name').get_value(),
+                game_id=self._game_id,
+                amount_of_players=2
+            )
