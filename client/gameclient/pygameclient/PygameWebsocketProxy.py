@@ -12,9 +12,10 @@ from websockets import client, WebSocketClientProtocol
 
 CONNECTED = pygame.event.custom_type()
 CONNECTION_ERROR = pygame.event.custom_type()
-RECEIVED = pygame.event.custom_type()
 MATCH_STARTED = pygame.event.custom_type()
-MOVE = pygame.event.custom_type()
+MATCH_REQUESTED = pygame.event.custom_type()
+MOVE_SENT = pygame.event.custom_type()
+MOVE_RECEIVED = pygame.event.custom_type()
 DISCONNECTED = pygame.event.custom_type()
 
 
@@ -58,15 +59,16 @@ class PygameWebsocketProxy:
         self._run(target=async_disconnect)
 
     def request_match(self, player_name: str, game_id: UUID, amount_of_players: int):
-        self._send(MatchRequestMessage(player_name, game_id, amount_of_players).to_payload().to_json())
+        self._send(MatchRequestMessage(player_name, game_id, amount_of_players).to_payload().to_json(), MATCH_REQUESTED)
 
     def send_move(self, match_id: UUID, payload: any) -> None:
-        self._send(MoveMessage(match_id, payload).to_payload().to_json())
+        self._send(MoveMessage(match_id, payload).to_payload().to_json(), MOVE_SENT)
 
-    def _send(self, message: str) -> None:
+    def _send(self, message: str, callback_event: int) -> None:
         async def async_send():
             try:
                 await self._websocket.send(message)
+                return pygame.event.post(pygame.event.Event(callback_event))
             except Exception as e:
                 return pygame.event.post(pygame.event.Event(CONNECTION_ERROR, message=e))
 
