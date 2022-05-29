@@ -1,8 +1,8 @@
 import pygame
 import pygame_menu
-from pygame_menu import Menu
-
 from gameclient.pygameclient.PygameWebsocketProxy import PygameWebsocketProxy, CONNECTED, RECEIVED
+from pygame_menu import Menu
+from pygame_menu.widgets import ToggleSwitch
 
 
 class MainInterface:
@@ -25,9 +25,8 @@ class MainInterface:
                 if event.type == pygame.QUIT:
                     exit()
                 elif event.type == CONNECTED:
-                    print("CONNECTED!!!")
-                    self._websocket.send("{}")
-                    self._websocket.listen()
+                    # self._main_menu.get_widget('connect').readonly = False
+                    self._main_menu.get_widget('connect').set_value(2)
                 elif event.type == RECEIVED:
                     print(f"received {event.message}")
 
@@ -40,11 +39,26 @@ class MainInterface:
     def _build_main_menu(self):
         main_menu = pygame_menu.Menu('TicTacToe', 1024, 1080, theme=pygame_menu.themes.THEME_BLUE)
         main_menu.add.text_input('Server address: ', default='localhost:8765', textinput_id='address')
-        main_menu.select_widget(main_menu.add.button('Connect', self._connect))
+        main_menu.select_widget(main_menu.add.generic_widget(self._build_connect_switch(), configure_defaults=True))
         main_menu.add.button('Quit', pygame_menu.events.EXIT)
         main_menu.enable()
         return main_menu
 
-    def _connect(self):
-        print(f"""Connecting to: {self._main_menu.get_widget("address").get_value()}""")
-        self._websocket.connect(self._main_menu.get_widget("address").get_value())
+    def _build_connect_switch(self) -> ToggleSwitch:
+        return ToggleSwitch(title='Connection Status: ',
+                            toggleswitch_id='connect',
+                            single_click=True,
+                            single_click_dir=False,
+                            slider_thickness=0,
+                            state_values=('Disconnected', 'Connecting', 'Connected'),
+                            state_color=((178, 178, 178), (206, 144, 0), (117, 185, 54)),
+                            state_text_font_color=((255, 255, 255), (255, 255, 255), (255, 255, 255)),
+                            state_width=(150, 150),
+                            state_text=('Disconnected', 'Connecting', 'Connected'),
+                            onchange=self._connect)
+
+    def _connect(self, state: str):
+        if state == 'Connecting':
+            print(f"""Connecting to: {self._main_menu.get_widget("address").get_value()}""")
+            self._websocket.connect(self._main_menu.get_widget("address").get_value())
+            self._main_menu.get_widget('connect').readonly = True
