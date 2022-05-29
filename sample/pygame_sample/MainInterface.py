@@ -52,7 +52,6 @@ class MainInterface:
                     print(f"Match started with position {event.message}")
                     self._tictactoe_interface = TicTacToeInterface(event.message)
 
-
             if self._main_menu.is_enabled():
                 self._main_menu.update(events)
                 self._main_menu.draw(self._surface)
