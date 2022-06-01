@@ -7,6 +7,7 @@ from gameclient.pygameclient.PygameWebsocketProxy import PygameWebsocketProxy, C
 from pygame_menu import Menu
 from pygame_menu.widgets import ToggleSwitch
 
+from pygame_sample import WINDOW_WIDTH, WINDOW_HEIGHT
 from pygame_sample.TicTacToeInterface import TicTacToeInterface
 
 
@@ -19,7 +20,7 @@ class MainInterface:
 
     def __init__(self) -> None:
         pygame.init()
-        self._surface = pygame.display.set_mode([1024, 1080], pygame.RESIZABLE)
+        self._surface = pygame.display.set_mode([WINDOW_WIDTH, WINDOW_HEIGHT], pygame.RESIZABLE)
         self._main_menu = self._build_main_menu()
         self._is_running = True
         self._websocket = PygameWebsocketProxy()
@@ -50,7 +51,9 @@ class MainInterface:
                     self._main_menu.get_widget('request').set_value(1)
                 elif event.type == MATCH_STARTED:
                     print(f"Match started with position {event.message}")
-                    self._tictactoe_interface = TicTacToeInterface(event.message)
+                    self._main_menu.disable()
+                    TicTacToeInterface(event.message, self._surface)
+                    self._is_running = False
 
             if self._main_menu.is_enabled():
                 self._main_menu.update(events)
@@ -59,7 +62,7 @@ class MainInterface:
             pygame.display.update()
 
     def _build_main_menu(self):
-        main_menu = pygame_menu.Menu('TicTacToe', 1024, 1080, theme=pygame_menu.themes.THEME_BLUE)
+        main_menu = pygame_menu.Menu('TicTacToe', WINDOW_WIDTH, WINDOW_HEIGHT, theme=pygame_menu.themes.THEME_BLUE)
         main_menu.add.text_input('Player name: ', default='', textinput_id='name')
         main_menu.add.text_input('Server address: ', default='localhost:8765', textinput_id='address')
         main_menu.select_widget(main_menu.add.generic_widget(self._build_connect_switch(), configure_defaults=True))
