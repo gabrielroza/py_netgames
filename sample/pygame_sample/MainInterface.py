@@ -51,9 +51,11 @@ class MainInterface:
                     self._main_menu.get_widget('request').set_value(1)
                 elif event.type == MATCH_STARTED:
                     print(f"Match started with position {event.message}")
-                    self._main_menu.disable()
-                    TicTacToeInterface(event.message, self._surface)
-                    self._is_running = False
+                    TicTacToeInterface(event.message, self._surface, self._websocket)
+                    self._main_menu.get_widget('connect').readonly = False
+                    self._main_menu.get_widget('connect').set_value(0)
+                    self._main_menu.get_widget('request').readonly = True
+                    self._main_menu.get_widget('request').set_value(0)
 
             if self._main_menu.is_enabled():
                 self._main_menu.update(events)

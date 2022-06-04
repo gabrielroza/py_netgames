@@ -80,9 +80,9 @@ class PygameWebsocketProxy:
                 async for message in self._websocket:
                     message = self.__deserializer.deserialize(message)
                     if WebhookPayloadType.MATCH_STARTED == message.type():
-                        pygame.event.post(pygame.event.Event(MATCH_STARTED, message=message.position))
+                        pygame.event.post(pygame.event.Event(MATCH_STARTED, message=message))
                     elif WebhookPayloadType.MOVE == message.type():
-                        pygame.event.post(pygame.event.Event(MOVE, message=message.payload))
+                        pygame.event.post(pygame.event.Event(MOVE_RECEIVED, message=message))
             except Exception as e:
                 return pygame.event.post(pygame.event.Event(CONNECTION_ERROR, message=e))
 

@@ -1,8 +1,10 @@
 import itertools
-from typing import Optional, Tuple, List
+from typing import Optional, Tuple, List, Literal
 
 from tictactoe.StalemateException import StalemateException
 from tictactoe.TicTacToeMark import TicTacToeMark
+
+TicTacToeCoordinate = Tuple[Literal[0, 1, 2], Literal[0, 1, 2]]
 
 
 class TicTacToeBoard:
@@ -18,7 +20,7 @@ class TicTacToeBoard:
         self.players = dict()
         super().__init__()
 
-    def mark(self, mark: TicTacToeMark, coordinate: Tuple[int, int]) -> bool:
+    def mark(self, mark: TicTacToeMark, coordinate: TicTacToeCoordinate) -> bool:
         if not self._board[coordinate[0]][coordinate[1]]:
             self._board[coordinate[0]][coordinate[1]] = mark
             return True
@@ -26,7 +28,7 @@ class TicTacToeBoard:
             return False
 
     def get_winner(self) -> Optional[TicTacToeMark]:
-        winning_coordinates = [
+        winning_coordinates: List[List[TicTacToeCoordinate]] = [
             [(0, 0), (0, 1), (0, 2)],
             [(1, 0), (1, 1), (1, 2)],
             [(2, 0), (2, 1), (2, 2)],

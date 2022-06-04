@@ -1,9 +1,11 @@
-from typing import Tuple, List
+from typing import Tuple, List, Union, Literal, Optional
 
 import pygame
-from gameclient.pygameclient.PygameWebsocketProxy import PygameWebsocketProxy
+from gameclient.pygameclient.PygameWebsocketProxy import PygameWebsocketProxy, MOVE_RECEIVED, CONNECTION_ERROR
+from model.messaging.message import MatchStartedMessage, MoveMessage
+from pygame import MOUSEBUTTONDOWN
 
-from tictactoe.TicTacToeBoard import TicTacToeBoard
+from tictactoe.TicTacToeBoard import TicTacToeBoard, TicTacToeCoordinate
 from tictactoe.TicTacToeMark import TicTacToeMark
 from pygame_sample import WINDOW_WIDTH, WINDOW_HEIGHT
 
@@ -16,9 +18,10 @@ class TicTacToeInterface:
     _is_running: bool
     _surface: pygame.Surface
 
-    def __init__(self, position: int, surface: pygame.Surface) -> None:
+    def __init__(self, message: MatchStartedMessage, surface: pygame.Surface, websocket: PygameWebsocketProxy) -> None:
         super().__init__()
-        self._is_turn = position == 0
+        self.match_id = message.match_id
+        self._is_turn = message.position == 0
         self._mark = TicTacToeMark.CROSS if self._is_turn else TicTacToeMark.CIRCLE
         self._surface = surface
         if self._is_turn:
@@ -26,6 +29,7 @@ class TicTacToeInterface:
         self._is_running = True
         self._setup()
         self._run()
+        self._websocket = websocket
 
     def _setup(self):
         self._surface.fill((255, 255, 255))
@@ -41,8 +45,46 @@ class TicTacToeInterface:
 
         pygame.display.update()
 
+    def _get_board_coordinate_from_click(self, mouse_position: Tuple[int, int]) -> Optional[TicTacToeCoordinate]:
+        x, y = mouse_position
+
+        def get_position(absolute_size, position) -> Optional[Literal[0, 1, 2]]:
+            first_third = absolute_size / 3
+            middle = absolute_size / 3 * 2
+            return 0 if position < first_third else 1 if position < middle else 2 if position < absolute_size else None
+
+        board_coordinate = get_position(WINDOW_HEIGHT, y), get_position(WINDOW_WIDTH, x)
+        print(board_coordinate)
+        return None if any(position is None for position in board_coordinate) else board_coordinate
+
+    def _handle_click(self, mouse_position: Tuple[int, int]):
+        if self._is_turn:
+            clicked_board_coordinate = self._get_board_coordinate_from_click(mouse_position)
+            marked = self._board.mark(self._mark,
+                                      clicked_board_coordinate) if clicked_board_coordinate is not None else False
+
+            if marked:
+                self._update_screen()
+                self._websocket.send_move(self.match_id, self._board)
+                self._is_turn = False
+
+    def _handle_move_received(self, message: MoveMessage):
+        self._board = message.payload
+        self._update_screen()
+
+    def _update_screen(self):
+        pass
+
+    def _defer_to_main_interface(self):
+        self._is_running = False
+
     def _run(self):
         while self._is_running:
             events = pygame.event.get()
             for event in events:
-                print(event)
+                if event.type == MOUSEBUTTONDOWN:
+                    self._handle_click(pygame.mouse.get_pos())
+                elif event.type == MOVE_RECEIVED:
+                    self._handle_move_received(event.message)
+                elif event.type == CONNECTION_ERROR:
+                    self._defer_to_main_interface()
