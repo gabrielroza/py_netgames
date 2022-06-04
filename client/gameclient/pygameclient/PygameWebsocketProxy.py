@@ -83,6 +83,7 @@ class PygameWebsocketProxy:
                         pygame.event.post(pygame.event.Event(MATCH_STARTED, message=message))
                     elif WebhookPayloadType.MOVE == message.type():
                         pygame.event.post(pygame.event.Event(MOVE_RECEIVED, message=message))
+                return pygame.event.post(pygame.event.Event(CONNECTION_ERROR))
             except Exception as e:
                 return pygame.event.post(pygame.event.Event(CONNECTION_ERROR, message=e))
 

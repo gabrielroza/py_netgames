@@ -81,6 +81,7 @@ class TicTacToeInterface:
 
     def _handle_move_received(self, message: MoveMessage):
         self._board = TicTacToeBoard.from_json(message.payload)
+        self._is_turn = True
         self._update_screen()
 
     def _update_screen(self):

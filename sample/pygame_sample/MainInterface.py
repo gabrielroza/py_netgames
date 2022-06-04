@@ -52,6 +52,7 @@ class MainInterface:
                 elif event.type == MATCH_STARTED:
                     print(f"Match started with position {event.message}")
                     TicTacToeInterface(event.message, self._surface, self._websocket)
+                    self._main_menu.select_widget('connect')
                     self._main_menu.get_widget('connect').readonly = False
                     self._main_menu.get_widget('connect').set_value(0)
                     self._main_menu.get_widget('request').readonly = True
