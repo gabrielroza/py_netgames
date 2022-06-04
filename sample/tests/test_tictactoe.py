@@ -52,10 +52,8 @@ class TicTacToeTest(unittest.TestCase):
             ]
         ]
 
-        board = TicTacToeBoard()
         for winning_board_configuration in winning_board_configurations:
-            board._board = winning_board_configuration
-            self.assertEqual(TicTacToeMark.CROSS, board.get_winner())
+            self.assertEqual(TicTacToeMark.CROSS, TicTacToeBoard(winning_board_configuration).get_winner())
 
     def test_handles_different_marks(self):
         board_with_both_symbols = [
@@ -64,9 +62,7 @@ class TicTacToeTest(unittest.TestCase):
             [None, TicTacToeMark.CIRCLE, None]
         ]
 
-        board = TicTacToeBoard()
-        board._board = board_with_both_symbols
-        self.assertEqual(TicTacToeMark.CROSS, board.get_winner())
+        self.assertEqual(TicTacToeMark.CROSS,  TicTacToeBoard(board_with_both_symbols).get_winner())
 
     def test_handles_ordered_marking(self):
         board = TicTacToeBoard()
@@ -94,6 +90,13 @@ class TicTacToeTest(unittest.TestCase):
             [TicTacToeMark.CIRCLE, TicTacToeMark.CROSS, TicTacToeMark.CIRCLE]
         ]
 
-        board = TicTacToeBoard()
-        board._board = board_with_both_symbols
-        self.assertRaises(StalemateException, board.get_winner)
+        self.assertRaises(StalemateException, TicTacToeBoard(board_with_both_symbols).get_winner)
+
+    def test_serializes_back_and_forth(self):
+        board = [
+            [TicTacToeMark.CROSS, TicTacToeMark.CROSS, TicTacToeMark.CIRCLE],
+            [None, TicTacToeMark.CROSS, TicTacToeMark.CIRCLE],
+            [None, TicTacToeMark.CIRCLE, TicTacToeMark.CROSS]
+        ]
+
+        self.assertEqual(TicTacToeBoard(board), TicTacToeBoard.from_json(TicTacToeBoard(board).to_json()))

@@ -55,7 +55,7 @@ class MatchStartedMessage(Message):
 @dataclass
 class MoveMessage(Message):
     match_id: UUID
-    payload: any
+    payload: str
 
     def type(self) -> WebhookPayloadType:
         return WebhookPayloadType.MOVE

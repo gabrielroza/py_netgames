@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class TicTacToeMark(Enum):
+class TicTacToeMark(str, Enum):
     CROSS = 'X'
     CIRCLE = 'O'
 

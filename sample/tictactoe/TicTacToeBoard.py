@@ -1,4 +1,6 @@
 import itertools
+import json
+from dataclasses import dataclass
 from typing import Optional, Tuple, List, Literal
 
 from tictactoe.StalemateException import StalemateException
@@ -7,18 +9,21 @@ from tictactoe.TicTacToeMark import TicTacToeMark
 TicTacToeCoordinate = Tuple[Literal[0, 1, 2], Literal[0, 1, 2]]
 
 
+@dataclass
 class TicTacToeBoard:
     _board: List[List[Optional[TicTacToeMark]]]
 
-    def __init__(self) -> None:
-        self._board = [
+    def __init__(self, board=None) -> None:
+        self._board = board if board else [
             [None, None, None],
             [None, None, None],
             [None, None, None]
         ]
-
-        self.players = dict()
         super().__init__()
+
+    @classmethod
+    def from_json(cls, value: str):
+        return TicTacToeBoard(board=json.loads(value))
 
     def mark(self, mark: TicTacToeMark, coordinate: TicTacToeCoordinate) -> bool:
         if not self._board[coordinate[0]][coordinate[1]]:
@@ -53,3 +58,6 @@ class TicTacToeBoard:
         except StopIteration:
             if None not in list(itertools.chain.from_iterable(self._board)):
                 raise StalemateException()
+
+    def to_json(self) -> str:
+        return json.dumps(self._board)

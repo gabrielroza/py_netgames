@@ -46,7 +46,7 @@ class AsyncIoBasedProxy(ABC):
         payload = MatchRequestMessage(player_name, game_id, amount_of_players).to_payload().to_json()
         await self._send_message(payload)
 
-    async def send_move(self, match_id: UUID, payload: any):
+    async def send_move(self, match_id: UUID, payload: str):
         payload = MoveMessage(match_id, payload).to_payload().to_json()
         await self._send_message(payload)
 

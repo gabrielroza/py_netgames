@@ -1,13 +1,13 @@
-from typing import Tuple, List, Union, Literal, Optional
+from typing import Tuple, List, Literal, Optional
 
 import pygame
 from gameclient.pygameclient.PygameWebsocketProxy import PygameWebsocketProxy, MOVE_RECEIVED, CONNECTION_ERROR
 from model.messaging.message import MatchStartedMessage, MoveMessage
 from pygame import MOUSEBUTTONDOWN
 
+from pygame_sample import WINDOW_WIDTH, WINDOW_HEIGHT
 from tictactoe.TicTacToeBoard import TicTacToeBoard, TicTacToeCoordinate
 from tictactoe.TicTacToeMark import TicTacToeMark
-from pygame_sample import WINDOW_WIDTH, WINDOW_HEIGHT
 
 
 class TicTacToeInterface:
@@ -64,7 +64,7 @@ class TicTacToeInterface:
 
             if marked:
                 self._update_screen()
-                self._websocket.send_move(self.match_id, self._board)
+                self._websocket.send_move(self.match_id, self._board.to_json())
                 self._is_turn = False
 
     def _get_board_coordinate_from_click(self, mouse_position: Tuple[int, int]) -> Optional[TicTacToeCoordinate]:
@@ -80,7 +80,7 @@ class TicTacToeInterface:
         return None if any(position is None for position in board_coordinate) else board_coordinate
 
     def _handle_move_received(self, message: MoveMessage):
-        self._board = message.payload
+        self._board = TicTacToeBoard.from_json(message.payload)
         self._update_screen()
 
     def _update_screen(self):
