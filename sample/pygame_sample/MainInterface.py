@@ -66,7 +66,6 @@ class MainInterface:
 
     def _build_main_menu(self):
         main_menu = pygame_menu.Menu('TicTacToe', WINDOW_WIDTH, WINDOW_HEIGHT, theme=pygame_menu.themes.THEME_BLUE)
-        main_menu.add.text_input('Player name: ', default='', textinput_id='name')
         main_menu.add.text_input('Server address: ', default='localhost:8765', textinput_id='address')
         main_menu.select_widget(main_menu.add.generic_widget(self._build_connect_switch(), configure_defaults=True))
         main_menu.add.generic_widget(self._build_match_request_switch(), configure_defaults=True)
@@ -117,7 +116,6 @@ class MainInterface:
             raise NotImplementedError()
         elif state == 'Awaiting players':
             self._websocket.request_match(
-                player_name=self._main_menu.get_widget('name').get_value(),
                 game_id=self._game_id,
                 amount_of_players=2
             )
