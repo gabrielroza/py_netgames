@@ -4,8 +4,10 @@ import pygame
 from gameclient.pygameclient.PygameWebsocketProxy import PygameWebsocketProxy, MOVE_RECEIVED, CONNECTION_ERROR
 from model.messaging.message import MatchStartedMessage, MoveMessage
 from pygame import MOUSEBUTTONDOWN
+from pygame.font import Font
 
 from pygame_sample import WINDOW_WIDTH, WINDOW_HEIGHT
+from tictactoe.StalemateException import StalemateException
 from tictactoe.TicTacToeBoard import TicTacToeBoard, TicTacToeCoordinate
 from tictactoe.TicTacToeMark import TicTacToeMark
 
@@ -25,8 +27,7 @@ class TicTacToeInterface:
         self._mark = TicTacToeMark.CROSS if self._is_turn else TicTacToeMark.CIRCLE
         self._surface = surface
         self._websocket = websocket
-        if self._is_turn:
-            self._board = TicTacToeBoard()
+        self._board = TicTacToeBoard() if self._is_turn else None
         self._is_running = True
         self._setup()
         self._run()
@@ -42,7 +43,7 @@ class TicTacToeInterface:
         ]
         for start_pos, end_pos in line_coordinates:
             pygame.draw.line(self._surface, (0, 0, 0), start_pos, end_pos, line_thickness)
-
+        self._update_screen()
         pygame.display.update()
 
     def _run(self):
@@ -58,9 +59,8 @@ class TicTacToeInterface:
 
     def _handle_click(self, mouse_position: Tuple[int, int]):
         if self._is_turn:
-            clicked_board_coordinate = self._get_board_coordinate_from_click(mouse_position)
-            marked = self._board.mark(self._mark,
-                                      clicked_board_coordinate) if clicked_board_coordinate is not None else False
+            board_coordinate = self._get_board_coordinate_from_click(mouse_position)
+            marked = self._board.mark(self._mark, board_coordinate) if board_coordinate is not None else False
 
             if marked:
                 self._update_screen()
@@ -85,4 +85,21 @@ class TicTacToeInterface:
         self._update_screen()
 
     def _update_screen(self):
-        pass
+
+        def evaluate_message() -> str:
+            if self._is_turn:
+                return "Make your move"
+            else:
+                try:
+                    if self._board and self._board.get_winner():
+                        return self._board.get_winner().value + " won"
+                    else:
+                        return "Awaiting opponent's move"
+                except StalemateException:
+                    return "Draw"
+
+        text = Font(None, 50).render(evaluate_message(), True, (255, 255, 255))
+        self._surface.fill((0, 0, 0), pygame.Rect(0, WINDOW_WIDTH, WINDOW_WIDTH, 100))
+        text_rect = text.get_rect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 1.03))
+        self._surface.blit(text, text_rect)
+        pygame.display.update()
