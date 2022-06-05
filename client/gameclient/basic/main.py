@@ -29,7 +29,7 @@ def setup_logger():
 async def coroutine():
     actor = Actor()
     await actor.connect("localhost:8765")
-    await actor.request_match("Gabriel", uuid.UUID("c0ec55a4-3c5d-4c78-a246-2c1c2cfe8a50"), 2)
+    await actor.request_match(uuid.UUID("c0ec55a4-3c5d-4c78-a246-2c1c2cfe8a50"), 2)
     return await actor.listen()
 
 if __name__ == '__main__':

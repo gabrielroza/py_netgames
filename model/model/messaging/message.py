@@ -27,7 +27,6 @@ class Message(ABC):
 @dataclass_json
 @dataclass
 class MatchRequestMessage(Message):
-    player_name: str
     game_id: UUID
     amount_of_players: int
 

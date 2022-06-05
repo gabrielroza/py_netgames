@@ -58,8 +58,8 @@ class PygameWebsocketProxy:
 
         self._run(target=async_disconnect)
 
-    def request_match(self, player_name: str, game_id: UUID, amount_of_players: int):
-        self._send(MatchRequestMessage(player_name, game_id, amount_of_players).to_payload().to_json(), MATCH_REQUESTED)
+    def request_match(self, game_id: UUID, amount_of_players: int):
+        self._send(MatchRequestMessage(game_id, amount_of_players).to_payload().to_json(), MATCH_REQUESTED)
 
     def send_move(self, match_id: UUID, payload: str) -> None:
         self._send(MoveMessage(match_id, payload).to_payload().to_json(), MOVE_SENT)

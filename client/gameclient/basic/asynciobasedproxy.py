@@ -42,8 +42,8 @@ class AsyncIoBasedProxy(ABC):
             elif WebhookPayloadType.MOVE == message.type():
                 await self._receive_move(message.payload)
 
-    async def request_match(self, player_name: str, game_id: UUID, amount_of_players: int):
-        payload = MatchRequestMessage(player_name, game_id, amount_of_players).to_payload().to_json()
+    async def request_match(self, game_id: UUID, amount_of_players: int):
+        payload = MatchRequestMessage(game_id, amount_of_players).to_payload().to_json()
         await self._send_message(payload)
 
     async def send_move(self, match_id: UUID, payload: str):
