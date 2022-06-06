@@ -88,20 +88,20 @@ class TicTacToeInterface:
         self._update_screen()
 
     def _update_screen(self):
-
-        def evaluate_message() -> str:
-            if self._is_turn:
-                return "Make your move"
+        game_over = False
+        try:
+            if self._board and self._board.get_winner():
+                message = self._board.get_winner() + " won"
+                game_over = True
+            elif self._is_turn:
+                message = "Make your move"
             else:
-                try:
-                    if self._board and self._board.get_winner():
-                        return self._board.get_winner().value + " won"
-                    else:
-                        return "Awaiting opponent's move"
-                except StalemateException:
-                    return "Draw"
+                message = "Awaiting opponent's move"
+        except StalemateException:
+            message = "Draw"
+            game_over = True
 
-        text = Font(None, 50).render(evaluate_message(), True, (255, 255, 255))
+        text = Font(None, 50).render(message, True, (255, 255, 255))
         self._surface.fill((0, 0, 0), pygame.Rect(0, WINDOW_WIDTH, WINDOW_WIDTH, 100))
         text_rect = text.get_rect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 1.03))
         self._surface.blit(text, text_rect)
@@ -127,6 +127,11 @@ class TicTacToeInterface:
         }
 
         for (row_index, column_index), mark in self._board.get_filled_coordinates().items() if self._board else []:
-            self._surface.blit(image_by_mark[mark], (row_positions[row_index], column_positions[column_index]))
+            self._surface.blit(image_by_mark[mark], (column_positions[column_index], row_positions[row_index]))
 
         pygame.display.update()
+
+        if game_over:
+            pygame.time.wait(3000)
+            self._websocket.disconnect()
+            self._is_running = False
