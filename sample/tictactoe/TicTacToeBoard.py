@@ -1,7 +1,7 @@
 import itertools
 import json
 from dataclasses import dataclass
-from typing import Optional, Tuple, List, Literal
+from typing import Optional, Tuple, List, Literal, Dict
 
 from tictactoe.StalemateException import StalemateException
 from tictactoe.TicTacToeMark import TicTacToeMark
@@ -58,6 +58,11 @@ class TicTacToeBoard:
         except StopIteration:
             if None not in list(itertools.chain.from_iterable(self._board)):
                 raise StalemateException()
+
+    def get_filled_coordinates(self) -> Dict[TicTacToeCoordinate, TicTacToeMark]:
+        return {
+            (row_index, column_index): value for row_index, row in enumerate(self._board) for column_index, value in enumerate(row) if value
+        }
 
     def to_json(self) -> str:
         return json.dumps(self._board)

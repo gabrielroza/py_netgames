@@ -62,7 +62,7 @@ class TicTacToeTest(unittest.TestCase):
             [None, TicTacToeMark.CIRCLE, None]
         ]
 
-        self.assertEqual(TicTacToeMark.CROSS,  TicTacToeBoard(board_with_both_symbols).get_winner())
+        self.assertEqual(TicTacToeMark.CROSS, TicTacToeBoard(board_with_both_symbols).get_winner())
 
     def test_handles_ordered_marking(self):
         board = TicTacToeBoard()
@@ -100,3 +100,22 @@ class TicTacToeTest(unittest.TestCase):
         ]
 
         self.assertEqual(TicTacToeBoard(board), TicTacToeBoard.from_json(TicTacToeBoard(board).to_json()))
+
+    def test_returns_filled_coordinates(self):
+        board = [
+            [TicTacToeMark.CROSS, TicTacToeMark.CROSS, TicTacToeMark.CIRCLE],
+            [None, TicTacToeMark.CROSS, TicTacToeMark.CIRCLE],
+            [None, TicTacToeMark.CIRCLE, TicTacToeMark.CROSS]
+        ]
+
+        self.assertEqual(
+            TicTacToeBoard(board).get_filled_coordinates(),
+            {(0, 0): TicTacToeMark.CROSS,
+             (0, 1): TicTacToeMark.CROSS,
+             (0, 2): TicTacToeMark.CIRCLE,
+             (1, 1): TicTacToeMark.CROSS,
+             (1, 2): TicTacToeMark.CIRCLE,
+             (2, 1): TicTacToeMark.CIRCLE,
+             (2, 2): TicTacToeMark.CROSS
+             }
+        )

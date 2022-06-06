@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Tuple, List, Literal, Optional
 
 import pygame
@@ -5,6 +6,8 @@ from gameclient.pygameclient.PygameWebsocketProxy import PygameWebsocketProxy, M
 from model.messaging.message import MatchStartedMessage, MoveMessage
 from pygame import MOUSEBUTTONDOWN
 from pygame.font import Font
+from pygame.image import load
+from pygame.transform import scale
 
 from pygame_sample import WINDOW_WIDTH, WINDOW_HEIGHT
 from tictactoe.StalemateException import StalemateException
@@ -63,9 +66,9 @@ class TicTacToeInterface:
             marked = self._board.mark(self._mark, board_coordinate) if board_coordinate is not None else False
 
             if marked:
-                self._update_screen()
-                self._websocket.send_move(self.match_id, self._board.to_json())
                 self._is_turn = False
+                self._websocket.send_move(self.match_id, self._board.to_json())
+                self._update_screen()
 
     def _get_board_coordinate_from_click(self, mouse_position: Tuple[int, int]) -> Optional[TicTacToeCoordinate]:
         x, y = mouse_position
@@ -102,4 +105,28 @@ class TicTacToeInterface:
         self._surface.fill((0, 0, 0), pygame.Rect(0, WINDOW_WIDTH, WINDOW_WIDTH, 100))
         text_rect = text.get_rect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 1.03))
         self._surface.blit(text, text_rect)
+
+        def load_image(relative_path: str):
+            return scale(load(str(Path(__file__).parent / relative_path)), (WINDOW_WIDTH / 4, WINDOW_HEIGHT / 4))
+
+        image_by_mark = {
+            TicTacToeMark.CROSS: load_image("../assets/X.png"),
+            TicTacToeMark.CIRCLE: load_image("../assets/O.png"),
+        }
+
+        row_positions = {
+            0: 30,
+            1: WINDOW_WIDTH / 3 + 30,
+            2: WINDOW_WIDTH / 3 * 2 + 30
+        }
+
+        column_positions = {
+            0: 30,
+            1: WINDOW_HEIGHT / 3 + 30,
+            2: WINDOW_HEIGHT / 3 * 2 + 30
+        }
+
+        for (row_index, column_index), mark in self._board.get_filled_coordinates().items() if self._board else []:
+            self._surface.blit(image_by_mark[mark], (row_positions[row_index], column_positions[column_index]))
+
         pygame.display.update()
