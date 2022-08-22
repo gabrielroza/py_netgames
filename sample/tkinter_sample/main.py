@@ -1,6 +1,4 @@
-from tkinter import Tk
-
-from tkinter_sample.TicTacToeInterface import TicTacToeInterface
+from tkinter_sample.MainInterface import MainInterface
 
 if __name__ == '__main__':
-    TicTacToeInterface(None, Tk(), None)
+    MainInterface().run()

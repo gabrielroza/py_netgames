@@ -45,7 +45,6 @@ class MainInterface:
                     self._main_menu.get_widget('connect').set_value(0)
                     self._main_menu.get_widget('request').readonly = True
                     self._main_menu.get_widget('request').set_value(0)
-                    print(event.message)
                 elif event.type == MATCH_REQUESTED:
                     self._main_menu.get_widget('request').readonly = True
                     self._main_menu.get_widget('request').set_value(1)
