@@ -45,10 +45,12 @@ class MainInterface:
         Label(self._root, text='Connection Status: ').grid(row=1)
 
         def _handle_connect_click():
-            pass
+            if self._connect_button["text"] == "Disconnected":
+                self._websocket.connect(self._address_field.get())
+                self._connect_button["text"] = "Connected"
 
         button = Button(self._root, text="Disconnected", command=_handle_connect_click, relief="groove")
-        button["state"] = DISABLED
+        # button["state"] = DISABLED
         button.grid(row=1, column=1)
         return button
 
