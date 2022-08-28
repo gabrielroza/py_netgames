@@ -1,4 +1,5 @@
-from tkinter import Tk, Label, Entry, Frame, CENTER, Widget, Button, DISABLED
+from tkinter import Tk, Entry, Menu
+from tkinter import simpledialog
 from uuid import UUID
 
 from gameclient.tkinterclient.TkinterWebsocketProxy import TkinterWebsocketProxy
@@ -8,7 +9,7 @@ from tkinter_sample import WINDOW_WIDTH, WINDOW_HEIGHT
 
 class MainInterface:
     _is_running: bool
-    _root: Widget
+    _root: Tk
     _websocket: TkinterWebsocketProxy
     _game_id: UUID
     _address_field: Entry
@@ -18,52 +19,35 @@ class MainInterface:
         self._websocket = TkinterWebsocketProxy()
         self._game_id = UUID('b6625465-9478-4331-9e68-ffac2f02942f')
         self._root = self._setup_tk()
-        self._address_field = self._build_server_address_field()
-        self._connect_button = self._build_connect_button()
-        self._build_match_request_button()
-        self._build_quit_button()
+        self._menu_bar = self._build_menu_bar()
 
     def run(self):
         self._root.mainloop()
 
-    def _setup_tk(self) -> Widget:
+    def _setup_tk(self) -> Tk:
         tk = Tk()
         tk.title("Tic Tac Toe")
-        tk.geometry(f"{WINDOW_WIDTH}x{WINDOW_HEIGHT}")
-        frame = Frame(tk)
-        frame.place(relx=.5, rely=.5, anchor=CENTER)
-        return frame
+        tk.minsize(WINDOW_WIDTH, WINDOW_HEIGHT)
+        return tk
 
-    def _build_server_address_field(self) -> Entry:
-        Label(self._root, text='Server address: ').grid(row=0)
-        address_entry: Entry = Entry(self._root)
-        address_entry.insert(0, 'localhost:8765')
-        address_entry.grid(row=0, column=1)
-        return address_entry
+    def _connect(self):
+        user_input = simpledialog.askstring("Server address", "Server address", initialvalue="localhost:8765")
+        self._websocket.connect(user_input)
+        self._menu_bar.entryconfig("Disconnect", state="normal")
+        self._menu_bar.entryconfig("Connect", state="disabled")
 
-    def _build_connect_button(self) -> Button:
-        Label(self._root, text='Connection Status: ').grid(row=1)
+    def _disconnect(self):
+        self._websocket.disconnect()
+        self._menu_bar.entryconfig("Disconnect", state="disabled")
+        self._menu_bar.entryconfig("Connect", state="normal")
 
-        def _handle_connect_click():
-            if self._connect_button["text"] == "Disconnected":
-                self._websocket.connect(self._address_field.get())
-                self._connect_button["text"] = "Connected"
-
-        button = Button(self._root, text="Disconnected", command=_handle_connect_click, relief="groove")
-        # button["state"] = DISABLED
-        button.grid(row=1, column=1)
-        return button
-
-    def _build_match_request_button(self):
-        Label(self._root, text='Request Match: ').grid(row=2)
-
-        def _handle_request_click():
-            pass
-
-        button = Button(self._root, text="Request", command=_handle_request_click, relief="groove")
-        button["state"] = DISABLED
-        button.grid(row=2, column=1)
-        return button
-
-    def _build_quit_button(self):
-        pass
+    def _build_menu_bar(self):
+        menubar = Menu(self._root)
+        connect = Menu(menubar, tearoff=0)
+        connect.add_command(label="Connect", command=self._connect)
+        connect.add_command(label="Disconnect", command=self._disconnect, state='disabled')
+        connect.add_separator()
+        connect.add_command(label="Exit", command=self._root.quit)
+        menubar.add_cascade(label="Connection", menu=connect)
+        self._root.config(menu=menubar)
+        return connect
