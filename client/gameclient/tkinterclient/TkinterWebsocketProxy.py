@@ -33,7 +33,7 @@ class TkinterWebsocketProxy:
         self._listeners = []
 
     def _run_blocking(self, coroutine):
-        return self._loop.run_until_complete(coroutine)
+        return asyncio.new_event_loop().run_until_complete(coroutine)
 
     def _run(self, target):
         asyncio.run_coroutine_threadsafe(target(), self._loop)
