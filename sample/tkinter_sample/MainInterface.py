@@ -8,7 +8,6 @@ from tkinter_sample import WINDOW_WIDTH, WINDOW_HEIGHT
 
 
 class MainInterface:
-    _is_running: bool
     _root: Tk
     _websocket: TkinterWebsocketProxy
     _game_id: UUID
@@ -20,6 +19,8 @@ class MainInterface:
         self._game_id = UUID('b6625465-9478-4331-9e68-ffac2f02942f')
         self._root = self._setup_tk()
         self._menu_bar = self._build_menu_bar()
+        self._connect_dropdown = self._build_connect_dropdown()
+        self._match_dropdown = self._build_match_dropdown()
 
     def run(self):
         self._root.mainloop()
@@ -33,21 +34,35 @@ class MainInterface:
     def _connect(self):
         user_input = simpledialog.askstring("Server address", "Server address", initialvalue="localhost:8765")
         self._websocket.connect(user_input)
-        self._menu_bar.entryconfig("Disconnect", state="normal")
-        self._menu_bar.entryconfig("Connect", state="disabled")
+        self._connect_dropdown.entryconfig("Disconnect", state="normal")
+        self._connect_dropdown.entryconfig("Connect", state="disabled")
+        self._match_dropdown.entryconfig("Request Match", state="normal")
 
     def _disconnect(self):
         self._websocket.disconnect()
-        self._menu_bar.entryconfig("Disconnect", state="disabled")
-        self._menu_bar.entryconfig("Connect", state="normal")
+        self._connect_dropdown.entryconfig("Disconnect", state="disabled")
+        self._connect_dropdown.entryconfig("Connect", state="normal")
+        self._match_dropdown.entryconfig("Request Match", state="disabled")
 
-    def _build_menu_bar(self):
-        menubar = Menu(self._root)
-        connect = Menu(menubar, tearoff=0)
+    def _request_match(self):
+        pass
+
+    def _build_connect_dropdown(self):
+        connect = Menu(self._menu_bar, tearoff=0)
         connect.add_command(label="Connect", command=self._connect)
         connect.add_command(label="Disconnect", command=self._disconnect, state='disabled')
         connect.add_separator()
         connect.add_command(label="Exit", command=self._root.quit)
-        menubar.add_cascade(label="Connection", menu=connect)
-        self._root.config(menu=menubar)
+        self._menu_bar.add_cascade(label="Connection", menu=connect)
         return connect
+
+    def _build_match_dropdown(self):
+        match = Menu(self._menu_bar, tearoff=0)
+        match.add_command(label="Request Match", command=self._request_match, state='disabled')
+        self._menu_bar.add_cascade(label="Match", menu=match)
+        return match
+
+    def _build_menu_bar(self):
+        bar = Menu(self._root)
+        self._root.config(menu=bar)
+        return bar
