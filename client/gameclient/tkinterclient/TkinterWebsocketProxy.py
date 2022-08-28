@@ -48,20 +48,20 @@ class TkinterWebsocketProxy:
         self._run(async_send)
 
     def connect(self, server_address: str = 'localhost:8765'):
-        async def async_connect() -> WebSocketClientProtocol:
-            return await client.connect("ws://" + server_address)
+        async def async_connect() -> None:
+            self._websocket = await client.connect("ws://" + server_address)
 
-        self._websocket = self._run_blocking(async_connect())
+        self._run(async_connect)
 
     def request_match(self, game_id: UUID, amount_of_players: int):
         self._send(MatchRequestMessage(game_id, amount_of_players).to_payload().to_json())
 
     def disconnect(self):
-        async def async_connect():
+        async def async_disconnect():
             await self._websocket.close()
             self._websocket = None
 
-        self._run_blocking(async_connect())
+        self._run(async_disconnect)
 
     def add_listener(self, listener: TkinterWebsocketListener):
         self._listeners.append(listener)
