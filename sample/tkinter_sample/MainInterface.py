@@ -45,7 +45,7 @@ class MainInterface:
         self._match_dropdown.entryconfig("Request Match", state="disabled")
 
     def _request_match(self):
-        pass
+        self._websocket.request_match(self._game_id, amount_of_players=2)
 
     def _build_connect_dropdown(self):
         connect = Menu(self._menu_bar, tearoff=0)
