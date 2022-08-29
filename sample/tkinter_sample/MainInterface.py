@@ -1,5 +1,4 @@
-from tkinter import Tk, Entry, Menu
-from tkinter import simpledialog
+from tkinter import Tk
 from uuid import UUID
 
 from gameclient.tkinterclient.TkinterWebsocketProxy import TkinterWebsocketProxy
@@ -21,6 +20,7 @@ class MainInterface:
         self.menu_bar = ServerConnectionMenubar(self._websocket, self._root)
 
     def run(self):
+        self._root.config(menu=self.menu_bar)
         self.menu_bar.configure()
         self._root.mainloop()
 
