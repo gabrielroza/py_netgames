@@ -5,7 +5,7 @@ from typing import List
 from uuid import UUID
 
 from model.messaging.deserializer import WebhookPayloadDeserializer
-from model.messaging.message import MatchRequestMessage
+from model.messaging.message import MatchRequestMessage, MoveMessage
 from model.messaging.webhook_payload import WebhookPayloadType
 from websockets import client
 from websockets.legacy.client import WebSocketClientProtocol
@@ -57,6 +57,9 @@ class TkinterWebsocketProxy:
 
     def request_match(self, game_id: UUID, amount_of_players: int):
         self._send(MatchRequestMessage(game_id, amount_of_players).to_payload().to_json())
+
+    def send_move(self, match_id: UUID, payload: str) -> None:
+        self._send(MoveMessage(match_id, payload).to_payload().to_json())
 
     def disconnect(self):
         async def async_disconnect():
