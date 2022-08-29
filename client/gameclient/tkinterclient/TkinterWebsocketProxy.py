@@ -6,6 +6,7 @@ from uuid import UUID
 
 from model.messaging.deserializer import WebhookPayloadDeserializer
 from model.messaging.message import MatchRequestMessage
+from model.messaging.webhook_payload import WebhookPayloadType
 from websockets import client
 from websockets.legacy.client import WebSocketClientProtocol
 
@@ -50,6 +51,7 @@ class TkinterWebsocketProxy:
     def connect(self, server_address: str = 'localhost:8765'):
         async def async_connect() -> None:
             self._websocket = await client.connect("ws://" + server_address)
+            self._listen()
 
         self._run(async_connect)
 
@@ -65,3 +67,17 @@ class TkinterWebsocketProxy:
 
     def add_listener(self, listener: TkinterWebsocketListener):
         self._listeners.append(listener)
+
+    def _listen(self) -> None:
+        async def async_listen():
+            try:
+                async for message in self._websocket:
+                    message = self._deserializer.deserialize(message)
+                    if WebhookPayloadType.MATCH_STARTED == message.type():
+                        [listener.match_started(message) for listener in self._listeners]
+                    elif WebhookPayloadType.MOVE == message.type():
+                        [listener.receive_move(message) for listener in self._listeners]
+            except Exception as e:
+                print(e)
+
+        self._run(target=async_listen)
