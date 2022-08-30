@@ -1,10 +1,10 @@
 import itertools
-import json
 from dataclasses import dataclass
 from typing import Optional, Tuple, List, Literal, Dict
 
 from tictactoe.StalemateException import StalemateException
 from tictactoe.TicTacToeMark import TicTacToeMark
+from tictactoe.TicTacToeState import TicTacToeState
 
 TicTacToeCoordinate = Tuple[Literal[0, 1, 2], Literal[0, 1, 2]]
 
@@ -12,22 +12,23 @@ TicTacToeCoordinate = Tuple[Literal[0, 1, 2], Literal[0, 1, 2]]
 @dataclass
 class TicTacToeBoard:
     _board: List[List[Optional[TicTacToeMark]]]
+    _mark: TicTacToeMark
+    _is_turn: bool
 
-    def __init__(self, board=None) -> None:
+    def __init__(self, position: int=0, board=None) -> None:
         self._board = board if board else [
             [None, None, None],
             [None, None, None],
             [None, None, None]
         ]
+        self._is_turn = position == 0
+        self._mark = TicTacToeMark.CROSS if self._is_turn else TicTacToeMark.CIRCLE
         super().__init__()
 
-    @classmethod
-    def from_json(cls, value: str):
-        return TicTacToeBoard(board=json.loads(value))
-
-    def mark(self, mark: TicTacToeMark, coordinate: TicTacToeCoordinate) -> bool:
-        if not self._board[coordinate[0]][coordinate[1]]:
-            self._board[coordinate[0]][coordinate[1]] = mark
+    def mark(self, coordinate: TicTacToeCoordinate) -> bool:
+        if self._is_turn and not self._board[coordinate[0]][coordinate[1]]:
+            self._board[coordinate[0]][coordinate[1]] = self._mark
+            self._is_turn = False
             return True
         else:
             return False
@@ -61,7 +62,8 @@ class TicTacToeBoard:
 
     def get_coordinates(self) -> Dict[TicTacToeCoordinate, Optional[TicTacToeMark]]:
         return {
-            (row_index, column_index): value for row_index, row in enumerate(self._board) for column_index, value in enumerate(row)
+            (row_index, column_index): value for row_index, row in enumerate(self._board) for column_index, value in
+            enumerate(row)
         }
 
     def get_filled_coordinates(self) -> Dict[TicTacToeCoordinate, TicTacToeMark]:
@@ -69,5 +71,38 @@ class TicTacToeBoard:
             coordinate: value for coordinate, value in self.get_coordinates().items() if value
         }
 
-    def to_json(self) -> str:
-        return json.dumps(self._board)
+    def flip(self):
+        self._is_turn = not self._is_turn
+        self._mark = {
+            TicTacToeMark.CROSS: TicTacToeMark.CIRCLE,
+            TicTacToeMark.CIRCLE: TicTacToeMark.CROSS
+        }[self._mark]
+        return self
+
+    def get_state(self) -> TicTacToeState:
+        game_over = False
+        try:
+            if not self._is_turn and self.get_winner():
+                message = self.get_winner() + " won"
+                game_over = True
+            elif self._is_turn:
+                message = "Make your move"
+            else:
+                message = "Awaiting opponent's move"
+        except StalemateException:
+            message = "Draw"
+            game_over = True
+
+        return TicTacToeState(game_over, message)
+
+    def to_dict(self):
+        return vars(self)
+
+    @classmethod
+    def from_dict(cls, attributes: Dict):
+        board = TicTacToeBoard()
+        board._board = attributes["_board"]
+        board._is_turn = attributes["_is_turn"]
+        board._mark = attributes["_mark"]
+        return board
+

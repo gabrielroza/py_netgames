@@ -1,7 +1,9 @@
 import asyncio
+import json
 import threading
 from asyncio import AbstractEventLoop
 from threading import Thread
+from typing import Dict
 from uuid import UUID
 
 import pygame
@@ -61,7 +63,7 @@ class PygameWebsocketProxy:
     def request_match(self, game_id: UUID, amount_of_players: int):
         self._send(MatchRequestMessage(game_id, amount_of_players).to_payload().to_json(), MATCH_REQUESTED)
 
-    def send_move(self, match_id: UUID, payload: str) -> None:
+    def send_move(self, match_id: UUID, payload: Dict[str, any]) -> None:
         self._send(MoveMessage(match_id, payload).to_payload().to_json(), MOVE_SENT)
 
     def _send(self, message: str, callback_event: int) -> None:

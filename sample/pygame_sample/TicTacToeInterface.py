@@ -10,7 +10,6 @@ from pygame.image import load
 from pygame.transform import scale
 
 from pygame_sample import WINDOW_WIDTH, WINDOW_HEIGHT
-from tictactoe.StalemateException import StalemateException
 from tictactoe.TicTacToeBoard import TicTacToeBoard, TicTacToeCoordinate
 from tictactoe.TicTacToeMark import TicTacToeMark
 
@@ -18,19 +17,15 @@ from tictactoe.TicTacToeMark import TicTacToeMark
 class TicTacToeInterface:
     _board: TicTacToeBoard
     _websocket: PygameWebsocketProxy
-    _is_turn: bool
-    _mark: TicTacToeMark
     _is_running: bool
     _surface: pygame.Surface
 
     def __init__(self, message: MatchStartedMessage, surface: pygame.Surface, websocket: PygameWebsocketProxy) -> None:
         super().__init__()
         self.match_id = message.match_id
-        self._is_turn = message.position == 0
-        self._mark = TicTacToeMark.CROSS if self._is_turn else TicTacToeMark.CIRCLE
         self._surface = surface
         self._websocket = websocket
-        self._board = TicTacToeBoard() if self._is_turn else None
+        self._board = TicTacToeBoard(message.position)
         self._is_running = True
         self._setup()
         self._run()
@@ -61,14 +56,12 @@ class TicTacToeInterface:
                     self._is_running = False
 
     def _handle_click(self, mouse_position: Tuple[int, int]):
-        if self._is_turn:
-            board_coordinate = self._get_board_coordinate_from_click(mouse_position)
-            marked = self._board.mark(self._mark, board_coordinate) if board_coordinate is not None else False
+        clicked_board_coordinate = self._get_board_coordinate_from_click(mouse_position)
+        marked = self._board.mark(clicked_board_coordinate) if clicked_board_coordinate is not None else False
 
-            if marked:
-                self._is_turn = False
-                self._websocket.send_move(self.match_id, self._board.to_json())
-                self._update_screen()
+        if marked:
+            self._websocket.send_move(self.match_id, self._board.to_dict())
+            self._update_screen()
 
     def _get_board_coordinate_from_click(self, mouse_position: Tuple[int, int]) -> Optional[TicTacToeCoordinate]:
         x, y = mouse_position
@@ -83,25 +76,12 @@ class TicTacToeInterface:
         return None if any(position is None for position in board_coordinate) else board_coordinate
 
     def _handle_move_received(self, message: MoveMessage):
-        self._board = TicTacToeBoard.from_json(message.payload)
-        self._is_turn = True
+        self._board = TicTacToeBoard.from_dict(message.payload).flip()
         self._update_screen()
 
     def _update_screen(self):
-        game_over = False
-        try:
-            if self._board and self._board.get_winner():
-                message = self._board.get_winner() + " won"
-                game_over = True
-            elif self._is_turn:
-                message = "Make your move"
-            else:
-                message = "Awaiting opponent's move"
-        except StalemateException:
-            message = "Draw"
-            game_over = True
-
-        text = Font(None, 50).render(message, True, (255, 255, 255))
+        state = self._board.get_state()
+        text = Font(None, 50).render(state.description, True, (255, 255, 255))
         self._surface.fill((0, 0, 0), pygame.Rect(0, WINDOW_WIDTH, WINDOW_WIDTH, 100))
         text_rect = text.get_rect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 1.03))
         self._surface.blit(text, text_rect)
@@ -131,7 +111,7 @@ class TicTacToeInterface:
 
         pygame.display.update()
 
-        if game_over:
+        if state.game_over:
             pygame.time.wait(3000)
             self._websocket.disconnect()
             self._is_running = False
