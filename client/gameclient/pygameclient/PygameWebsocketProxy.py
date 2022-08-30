@@ -1,16 +1,9 @@
-import asyncio
-import json
-import threading
-from asyncio import AbstractEventLoop
-from threading import Thread
-from typing import Dict
-from uuid import UUID
+from typing import Optional
 
 import pygame
-from model.messaging.deserializer import WebhookPayloadDeserializer
-from model.messaging.message import MoveMessage, MatchRequestMessage
-from model.messaging.webhook_payload import WebhookPayloadType
-from websockets import client, WebSocketClientProtocol
+from model.messaging.message import MoveMessage, MatchStartedMessage
+
+from gameclient.basic.BaseWebsocketProxy import BaseWebsocketProxy
 
 CONNECTED = pygame.event.custom_type()
 CONNECTION_ERROR = pygame.event.custom_type()
@@ -21,75 +14,30 @@ MOVE_RECEIVED = pygame.event.custom_type()
 DISCONNECTED = pygame.event.custom_type()
 
 
-class PygameWebsocketProxy:
-    _thread: Thread
-    _loop: AbstractEventLoop
-    _websocket: WebSocketClientProtocol
-    _deserializer: WebhookPayloadDeserializer
+class PygameWebsocketProxy(BaseWebsocketProxy):
+    _pygame: pygame
 
     def __init__(self) -> None:
         super().__init__()
-        self._loop = asyncio.new_event_loop()
-        self.__deserializer = WebhookPayloadDeserializer()
-
-        def start_background_loop(loop: asyncio.AbstractEventLoop) -> None:
-            asyncio.set_event_loop(loop)
-            loop.run_forever()
-
-        self._thread = threading.Thread(target=start_background_loop, args=(self._loop,))
-        self._thread.start()
         self._pygame = pygame
 
-    def connect(self, address: str) -> None:
-        async def async_connect():
-            try:
-                self._websocket = await client.connect("ws://" + address)
-                return pygame.event.post(pygame.event.Event(CONNECTED, message={}))
-            except Exception as e:
-                return pygame.event.post(pygame.event.Event(CONNECTION_ERROR, message=e))
+    def _receive_match_start(self, match: MatchStartedMessage):
+        pygame.event.post(pygame.event.Event(MATCH_STARTED, message=match))
 
-        self._run(target=async_connect)
+    def _receive_move(self, move: MoveMessage):
+        pygame.event.post(pygame.event.Event(MOVE_RECEIVED, message=move))
 
-    def disconnect(self) -> None:
-        async def async_disconnect():
-            try:
-                await self._websocket.close()
-                return pygame.event.post(pygame.event.Event(DISCONNECTED, message={}))
-            except Exception as e:
-                return pygame.event.post(pygame.event.Event(CONNECTION_ERROR, message=e))
+    def _disconnection(self):
+        pygame.event.post(pygame.event.Event(DISCONNECTED, message={}))
 
-        self._run(target=async_disconnect)
+    def _connection_success(self):
+        pygame.event.post(pygame.event.Event(CONNECTED, message={}))
 
-    def request_match(self, game_id: UUID, amount_of_players: int):
-        self._send(MatchRequestMessage(game_id, amount_of_players).to_payload().to_json(), MATCH_REQUESTED)
+    def _error(self, error: Exception):
+        pygame.event.post(pygame.event.Event(CONNECTION_ERROR, message=error))
 
-    def send_move(self, match_id: UUID, payload: Dict[str, any]) -> None:
-        self._send(MoveMessage(match_id, payload).to_payload().to_json(), MOVE_SENT)
+    def _match_requested_success(self):
+        pygame.event.post(pygame.event.Event(MATCH_REQUESTED, message={}))
 
-    def _send(self, message: str, callback_event: int) -> None:
-        async def async_send():
-            try:
-                await self._websocket.send(message)
-                return pygame.event.post(pygame.event.Event(callback_event))
-            except Exception as e:
-                return pygame.event.post(pygame.event.Event(CONNECTION_ERROR, message=e))
-
-        self._run(target=async_send)
-
-    def listen(self) -> None:
-        async def async_listen():
-            try:
-                async for message in self._websocket:
-                    message = self.__deserializer.deserialize(message)
-                    if WebhookPayloadType.MATCH_STARTED == message.type():
-                        pygame.event.post(pygame.event.Event(MATCH_STARTED, message=message))
-                    elif WebhookPayloadType.MOVE == message.type():
-                        pygame.event.post(pygame.event.Event(MOVE_RECEIVED, message=message))
-                return pygame.event.post(pygame.event.Event(CONNECTION_ERROR))
-            except Exception as e:
-                return pygame.event.post(pygame.event.Event(CONNECTION_ERROR, message=e))
-
-        self._run(target=async_listen)
-
-    def _run(self, target):
-        asyncio.run_coroutine_threadsafe(target(), self._loop)
+    def _move_sent_success(self):
+        pygame.event.post(pygame.event.Event(MOVE_SENT, message=MATCH_REQUESTED))

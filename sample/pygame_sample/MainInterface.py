@@ -34,13 +34,13 @@ class MainInterface:
                     self._main_menu.get_widget('connect').readonly = False
                     self._main_menu.get_widget('connect').set_value(2)
                     self._main_menu.get_widget('request').readonly = False
-                    self._websocket.listen()
                 elif event.type == DISCONNECTED:
                     self._main_menu.get_widget('connect').readonly = False
                     self._main_menu.get_widget('connect').set_value(0)
                     self._main_menu.get_widget('request').readonly = True
                     self._main_menu.get_widget('request').set_value(0)
                 elif event.type == CONNECTION_ERROR:
+                    print(event.message)
                     self._main_menu.get_widget('connect').readonly = False
                     self._main_menu.get_widget('connect').set_value(0)
                     self._main_menu.get_widget('request').readonly = True
