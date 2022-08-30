@@ -2,7 +2,7 @@ import asyncio
 import threading
 from abc import ABC
 from asyncio import AbstractEventLoop
-from typing import Dict, Optional
+from typing import Dict
 from uuid import UUID
 
 from model.messaging.deserializer import WebhookPayloadDeserializer
