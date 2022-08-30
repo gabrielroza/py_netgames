@@ -82,7 +82,7 @@ class TicTacToeBoard:
     def get_state(self) -> TicTacToeState:
         game_over = False
         try:
-            if not self._is_turn and self.get_winner():
+            if self.get_winner():
                 message = self.get_winner() + " won"
                 game_over = True
             elif self._is_turn:
