@@ -16,3 +16,15 @@ class TkinterWebsocketListener(ABC):
 
     def receive_disconnect(self):
         raise NotImplementedError("Method receive_disconnect not overwritten")
+
+    def connection_success(self):
+        pass
+
+    def error(self, error: Exception):
+        pass
+
+    def match_requested_success(self):
+        pass
+
+    def move_sent_success(self):
+        pass

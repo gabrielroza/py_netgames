@@ -27,7 +27,7 @@ class ServerConnectionMenubar(Menu):
         self._connect_dropdown.entryconfig("Connect", state="disabled")
         self._match_dropdown.entryconfig("Request Match", state="normal")
 
-    def _disconnect(self):
+    def disconnect(self):
         self._websocket.disconnect()
         self._connect_dropdown.entryconfig("Disconnect", state="disabled")
         self._connect_dropdown.entryconfig("Connect", state="normal")
@@ -39,7 +39,7 @@ class ServerConnectionMenubar(Menu):
     def _build_connect_dropdown(self):
         connect = Menu(self, tearoff=0)
         connect.add_command(label="Connect", command=self._connect)
-        connect.add_command(label="Disconnect", command=self._disconnect, state='disabled')
+        connect.add_command(label="Disconnect", command=self.disconnect, state='disabled')
         connect.add_separator()
         connect.add_command(label="Exit", command=self._tk.quit)
         self.add_cascade(label="Connection", menu=connect)

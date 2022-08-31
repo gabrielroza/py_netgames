@@ -60,15 +60,13 @@ class TicTacToeBoard:
             if None not in list(itertools.chain.from_iterable(self._board)):
                 raise StalemateException()
 
-    def get_coordinates(self) -> Dict[TicTacToeCoordinate, Optional[TicTacToeMark]]:
-        return {
-            (row_index, column_index): value for row_index, row in enumerate(self._board) for column_index, value in
-            enumerate(row)
-        }
+    @classmethod
+    def get_coordinates(cls) -> List[TicTacToeCoordinate]:
+        return [(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2), (2, 0), (2, 1), (2, 2)]
 
     def get_filled_coordinates(self) -> Dict[TicTacToeCoordinate, TicTacToeMark]:
         return {
-            coordinate: value for coordinate, value in self.get_coordinates().items() if value
+            (row_index, column_index): value for row_index, row in enumerate(self._board) for column_index, value in enumerate(row) if value
         }
 
     def flip(self):

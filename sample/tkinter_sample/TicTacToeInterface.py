@@ -1,4 +1,5 @@
-from tkinter import Tk, Button
+from tkinter import Tk, Button, Label, CENTER
+from typing import List, Any, Dict
 from uuid import UUID
 
 from gameclient.tkinterclient.TkinterWebsocketListener import TkinterWebsocketListener
@@ -18,9 +19,8 @@ class TicTacToeInterface(TkinterWebsocketListener):
     _menu_bar = ServerConnectionMenubar
     _ongoing_match: bool
     _match_id: UUID
-    _is_turn: bool
-    _mark: TicTacToeMark
     _board: TicTacToeBoard
+    _buttons: Dict[TicTacToeCoordinate, Button]
 
     def __init__(self) -> None:
         super().__init__()
@@ -35,21 +35,43 @@ class TicTacToeInterface(TkinterWebsocketListener):
         self._websocket = TkinterWebsocketProxy()
         self._game_id = UUID('b6625465-9478-4331-9e68-ffac2f02942f')
         self._menu_bar = ServerConnectionMenubar(self._websocket, self._tk)
-        self.ongoing_match = False
+        self._ongoing_match = False
         self.match_id = None
-        self._is_turn = False
-        self._mark = None
         self._board = None
+        self._buttons = {}
+        self._label = None
 
     def _update_screen(self):
-        def build_button(coordinate: TicTacToeCoordinate, value: TicTacToeMark):
+        def build_button(coordinate: TicTacToeCoordinate, value: TicTacToeMark = None) -> Button:
             button = Button(height=4, width=8, font=("Helvetica", "30"), command=lambda: self._handle_click(coordinate))
             button.grid(row=coordinate[0], column=coordinate[1])
+            self._buttons[coordinate] = button
             if value:
                 button.configure(text=value)
+            return button
 
-        if self.ongoing_match:
-            [build_button(coordinate, value) for coordinate, value in self._board.get_coordinates().items()]
+        if self._ongoing_match:
+            state = self._board.get_state()
+            [self._buttons[coordinate].configure(text=value) for coordinate, value in
+             self._board.get_filled_coordinates().items()]
+            self._label.configure(text=state.description)
+
+            if state.game_over:
+                self._menu_bar.disconnect()
+                self._board = None
+                self._ongoing_match = False
+                self._tk.after(3000, self._update_screen)
+
+        else:
+            [button.destroy() for button in self._buttons.values()]
+            self._buttons = {}
+            if self._label:
+                self._label.destroy()
+                self._label = None
+            self._buttons = {coordinate: build_button(coordinate, None) for coordinate in
+                             TicTacToeBoard.get_coordinates()}
+            self._label = Label(self._tk, text="Awaiting match", anchor=CENTER)
+            self._label.grid(row=3, column=1)
 
     def run(self):
         self._tk.config(menu=self._menu_bar)
@@ -59,23 +81,19 @@ class TicTacToeInterface(TkinterWebsocketListener):
 
     def _handle_click(self, coordinate: TicTacToeCoordinate):
         print(coordinate)
-        if self.ongoing_match and self._is_turn and self._board.mark(self._mark, coordinate):
-            self._is_turn = False
-            self._websocket.send_move(self.match_id, self._board.to_json())
+        if self._ongoing_match and self._board.mark(coordinate):
+            self._websocket.send_move(self.match_id, self._board.to_dict())
             self._update_screen()
 
     def match_started(self, message: MatchStartedMessage):
-        self.ongoing_match = True
+        self._ongoing_match = True
         self.match_id = message.match_id
-        self._is_turn = message.position == 0
-        self._mark = TicTacToeMark.CROSS if self._is_turn else TicTacToeMark.CIRCLE
-        self._board = TicTacToeBoard() if self._is_turn else None
+        self._board = TicTacToeBoard(position=message.position)
         self._update_screen()
 
     def receive_move(self, message: MoveMessage):
         print(message)
-        self._board = TicTacToeBoard.from_json(message.payload)
-        self._is_turn = True
+        self._board = TicTacToeBoard.from_dict(message.payload).flip()
         self._update_screen()
 
     def receive_disconnect(self):
