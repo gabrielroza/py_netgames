@@ -8,7 +8,6 @@ from gameclient.tkinterclient.TkinterWebsocketProxy import TkinterWebsocketProxy
 class ServerConnectionMenubar(Menu):
     _tk: Tk
     _websocket: TkinterWebsocketProxy
-    _game_id: UUID
     _connect_dropdown: Menu
     _match_dropdown: Menu
 
@@ -16,7 +15,6 @@ class ServerConnectionMenubar(Menu):
         super().__init__(tk, **kwargs)
         self._tk = tk
         self._websocket = websocket
-        self._game_id = UUID('b6625465-9478-4331-9e68-ffac2f02942f')
         self._connect_dropdown = self._build_connect_dropdown()
         self._match_dropdown = self._build_match_dropdown()
 
@@ -34,7 +32,7 @@ class ServerConnectionMenubar(Menu):
         self._match_dropdown.entryconfig("Request Match", state="disabled")
 
     def _request_match(self):
-        self._websocket.request_match(self._game_id, amount_of_players=2)
+        self._websocket.request_match(amount_of_players=2)
 
     def _build_connect_dropdown(self):
         connect = Menu(self, tearoff=0)

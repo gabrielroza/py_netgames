@@ -10,17 +10,21 @@ from model.messaging.message import MoveMessage, MatchRequestMessage, MatchStart
 from model.messaging.webhook_payload import WebhookPayloadType
 from websockets import client, WebSocketClientProtocol
 
+from gameclient.id.IdentifierFileGenerator import IdentifierFileGenerator
+
 
 class BaseWebsocketProxy(ABC):
     _thread: threading.Thread
     _loop: AbstractEventLoop
     _websocket: WebSocketClientProtocol
     _deserializer: WebhookPayloadDeserializer
+    _game_id: UUID
 
-    def __init__(self) -> None:
+    def __init__(self, game_id: UUID = None) -> None:
         super().__init__()
         self._loop = asyncio.new_event_loop()
         self.__deserializer = WebhookPayloadDeserializer()
+        self._game_id = game_id if game_id else IdentifierFileGenerator().get_or_create_identifier()
 
         def start_background_loop(loop: asyncio.AbstractEventLoop) -> None:
             asyncio.set_event_loop(loop)
@@ -71,8 +75,8 @@ class BaseWebsocketProxy(ABC):
 
         self._run(target=async_disconnect)
 
-    def request_match(self, game_id: UUID, amount_of_players: int):
-        self._send(MatchRequestMessage(game_id, amount_of_players).to_payload().to_json(),
+    def request_match(self, amount_of_players: int):
+        self._send(MatchRequestMessage(self._game_id, amount_of_players).to_payload().to_json(),
                    self._match_requested_success)
 
     def send_move(self, match_id: UUID, payload: Dict[str, any]) -> None:

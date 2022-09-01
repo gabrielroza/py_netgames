@@ -17,8 +17,8 @@ DISCONNECTED = pygame.event.custom_type()
 class PygameWebsocketProxy(BaseWebsocketProxy):
     _pygame: pygame
 
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
         self._pygame = pygame
 
     def _receive_match_start(self, match: MatchStartedMessage):

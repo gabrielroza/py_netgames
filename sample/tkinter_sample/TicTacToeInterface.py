@@ -15,7 +15,6 @@ from tkinter_sample.ServerConnectionMenubar import ServerConnectionMenubar
 class TicTacToeInterface(TkinterWebsocketListener):
     _tk: Tk
     _websocket: TkinterWebsocketProxy
-    _game_id: UUID
     _menu_bar = ServerConnectionMenubar
     _ongoing_match: bool
     _match_id: UUID
@@ -33,7 +32,6 @@ class TicTacToeInterface(TkinterWebsocketListener):
 
         self._tk = _setup_tk()
         self._websocket = TkinterWebsocketProxy()
-        self._game_id = UUID('b6625465-9478-4331-9e68-ffac2f02942f')
         self._menu_bar = ServerConnectionMenubar(self._websocket, self._tk)
         self._ongoing_match = False
         self.match_id = None

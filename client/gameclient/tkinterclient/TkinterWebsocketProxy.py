@@ -9,8 +9,8 @@ from gameclient.tkinterclient.TkinterWebsocketListener import TkinterWebsocketLi
 class TkinterWebsocketProxy(BaseWebsocketProxy):
     _listeners: List[TkinterWebsocketListener]
 
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
         self._listeners = []
 
     def add_listener(self, listener: TkinterWebsocketListener):

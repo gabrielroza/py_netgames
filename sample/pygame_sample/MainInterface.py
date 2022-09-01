@@ -1,5 +1,3 @@
-from uuid import UUID, uuid4
-
 import pygame
 import pygame_menu
 from gameclient.pygameclient.PygameWebsocketProxy import PygameWebsocketProxy, CONNECTED, CONNECTION_ERROR, \
@@ -16,7 +14,6 @@ class MainInterface:
     _surface: pygame.Surface
     _main_menu: Menu
     _websocket: PygameWebsocketProxy
-    _game_id: UUID
 
     def __init__(self) -> None:
         pygame.init()
@@ -24,7 +21,6 @@ class MainInterface:
         self._main_menu = self._build_main_menu()
         self._is_running = True
         self._websocket = PygameWebsocketProxy()
-        self._game_id = UUID('b6625465-9478-4331-9e68-ffac2f02942f')
 
     def run(self):
         while self._is_running:
@@ -115,6 +111,5 @@ class MainInterface:
             raise NotImplementedError()
         elif state == 'Awaiting players':
             self._websocket.request_match(
-                game_id=self._game_id,
                 amount_of_players=2
             )
