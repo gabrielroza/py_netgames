@@ -13,4 +13,4 @@ python_version = "3.8"
 
 [dev-packages]
 client = {path = "./../client"}
-model = {path = "./../model"}
+model = {path = "./../model", editable = true}
