@@ -1,7 +1,7 @@
 from typing import Dict, Callable, Any
 
-from model.messaging.message import Message, MatchRequestMessage, MatchStartedMessage, MoveMessage
-from model.messaging.webhook_payload import WebhookPayload, WebhookPayloadType
+from py_netgames_model.messaging.message import Message, MatchRequestMessage, MatchStartedMessage, MoveMessage
+from py_netgames_model.messaging.webhook_payload import WebhookPayload, WebhookPayloadType
 
 
 class WebhookPayloadDeserializer:

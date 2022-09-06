@@ -2,7 +2,7 @@ import asyncio
 import logging
 
 import websockets
-from model.messaging.deserializer import WebhookPayloadDeserializer
+from py_netgames_model.messaging.deserializer import WebhookPayloadDeserializer
 from websockets import WebSocketServerProtocol, ConnectionClosedError
 
 from server import Server

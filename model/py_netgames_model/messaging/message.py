@@ -6,7 +6,7 @@ from uuid import UUID
 
 from dataclasses_json import dataclass_json
 
-from model.messaging.webhook_payload import WebhookPayloadType, WebhookPayload
+from py_netgames_model.messaging.webhook_payload import WebhookPayloadType, WebhookPayload
 
 
 @dataclass

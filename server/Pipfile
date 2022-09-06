@@ -6,9 +6,10 @@ name = "pypi"
 [packages]
 websockets="*"
 dataclasses-json="*"
+py_netgames_model="*"
 
 [dev-packages]
-model = {path = "./../model"}
+#py_netgames_model = {path = "./../model"}
 
 
 [requires]

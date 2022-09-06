@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from typing import FrozenSet
 from uuid import UUID, uuid4
 
-from model.messaging.message import MatchRequestMessage
+from py_netgames_model.messaging.message import MatchRequestMessage
 from websockets import WebSocketServerProtocol
 
 
