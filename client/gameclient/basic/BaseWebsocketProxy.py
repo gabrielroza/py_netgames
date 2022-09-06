@@ -5,9 +5,9 @@ from asyncio import AbstractEventLoop
 from typing import Dict
 from uuid import UUID
 
-from model.messaging.deserializer import WebhookPayloadDeserializer
-from model.messaging.message import MoveMessage, MatchRequestMessage, MatchStartedMessage
-from model.messaging.webhook_payload import WebhookPayloadType
+from py_netgames_model.messaging.deserializer import WebhookPayloadDeserializer
+from py_netgames_model.messaging.message import MoveMessage, MatchRequestMessage, MatchStartedMessage
+from py_netgames_model.messaging.webhook_payload import WebhookPayloadType
 from websockets import client, WebSocketClientProtocol
 
 from gameclient.id.IdentifierFileGenerator import IdentifierFileGenerator

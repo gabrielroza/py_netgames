@@ -3,7 +3,7 @@ from typing import Tuple, List, Literal, Optional
 
 import pygame
 from gameclient.pygameclient.PygameWebsocketProxy import PygameWebsocketProxy, MOVE_RECEIVED, CONNECTION_ERROR
-from model.messaging.message import MatchStartedMessage, MoveMessage
+from py_netgames_model.messaging.message import MatchStartedMessage, MoveMessage
 from pygame import MOUSEBUTTONDOWN
 from pygame.font import Font
 from pygame.image import load

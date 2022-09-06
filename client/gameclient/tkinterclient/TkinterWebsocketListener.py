@@ -1,6 +1,6 @@
 from abc import ABC
 
-from model.messaging.message import MatchStartedMessage, MoveMessage
+from py_netgames_model.messaging.message import MatchStartedMessage, MoveMessage
 
 
 class TkinterWebsocketListener(ABC):

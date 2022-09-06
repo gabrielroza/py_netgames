@@ -1,6 +1,6 @@
 from typing import List
 
-from model.messaging.message import MatchStartedMessage, MoveMessage
+from py_netgames_model.messaging.message import MatchStartedMessage, MoveMessage
 
 from gameclient.basic.BaseWebsocketProxy import BaseWebsocketProxy
 from gameclient.tkinterclient.TkinterWebsocketListener import TkinterWebsocketListener

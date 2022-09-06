@@ -4,7 +4,7 @@ from uuid import UUID
 
 from gameclient.tkinterclient.TkinterWebsocketListener import TkinterWebsocketListener
 from gameclient.tkinterclient.TkinterWebsocketProxy import TkinterWebsocketProxy
-from model.messaging.message import MatchStartedMessage, MoveMessage
+from py_netgames_model.messaging.message import MatchStartedMessage, MoveMessage
 
 from tictactoe.TicTacToeBoard import TicTacToeBoard, TicTacToeCoordinate
 from tictactoe.TicTacToeMark import TicTacToeMark

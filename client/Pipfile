@@ -7,9 +7,10 @@ name = "pypi"
 websockets = "*"
 asgiref = "*"
 pygame="*"
+py_netgames_model="*"
 
 [requires]
 python_version = "3.8"
 
-[dev-packages.model]
-path = "./../model"
+[dev-packages]
+#py_netgames_model = {path = "./../model"}

@@ -1,7 +1,7 @@
 from typing import Optional
 
 import pygame
-from model.messaging.message import MoveMessage, MatchStartedMessage
+from py_netgames_model.messaging.message import MoveMessage, MatchStartedMessage
 
 from gameclient.basic.BaseWebsocketProxy import BaseWebsocketProxy
 

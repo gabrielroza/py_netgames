@@ -6,6 +6,6 @@ setup(name='client',
       author='Gabriel Machado',
       packages=find_namespace_packages(),
       install_requires=[
-          'model'
+          'py_netgames_model'
       ]
       )

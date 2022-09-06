@@ -7,10 +7,11 @@ name = "pypi"
 pygame="*"
 pygame-menu="*"
 websockets = "*"
+py_netgames_model="*"
 
 [requires]
 python_version = "3.8"
 
 [dev-packages]
 client = {path = "./../client"}
-model = {path = "./../model", editable = true}
+#py_netgames_model = {path = "./../model", editable = true}
