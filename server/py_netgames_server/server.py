@@ -6,7 +6,7 @@ from typing import Type, Dict, Callable, TypeVar, Set, Awaitable
 from py_netgames_model.messaging.message import MatchRequestMessage, Message, MatchStartedMessage, MoveMessage
 from websockets import WebSocketServerProtocol
 
-from match import Match
+from py_netgames_server.match import Match
 
 T = TypeVar('T', bound=Message)
 

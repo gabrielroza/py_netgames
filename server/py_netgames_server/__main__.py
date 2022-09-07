@@ -1,6 +1,6 @@
 import logging
 
-from main_loop import MainLoop
+from py_netgames_server.main_loop import MainLoop
 
 
 def setup_logger():

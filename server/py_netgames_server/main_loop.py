@@ -5,7 +5,7 @@ import websockets
 from py_netgames_model.messaging.deserializer import WebhookPayloadDeserializer
 from websockets import WebSocketServerProtocol, ConnectionClosedError
 
-from server import Server
+from py_netgames_server.server import Server
 
 
 class MainLoop:

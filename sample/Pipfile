@@ -7,7 +7,7 @@ name = "pypi"
 pygame="*"
 pygame-menu="*"
 websockets = "*"
-py_netgames_model="*"
+py_netgames_model="==1.1"
 
 [requires]
 python_version = "3.8"
