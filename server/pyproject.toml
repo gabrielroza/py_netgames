@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "py_netgames_server"
 license = { file = 'LICENSE.txt' }
-version = "1.4"
+version = "1.5"
 description = 'Py-NetGames Server'
 authors = [
     { name = 'Gabriel Machado da Roza', email = 'gabrielmachadodaroza@outlook.com' }
