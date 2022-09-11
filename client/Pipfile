@@ -13,4 +13,5 @@ py_netgames_model="*"
 python_version = "3.8"
 
 [dev-packages]
+py_netgames_server = {path = "./../server"}
 #py_netgames_model = {path = "./../model"}

@@ -4,23 +4,27 @@ import logging
 import websockets
 from py_netgames_model.messaging.deserializer import WebhookPayloadDeserializer
 from websockets import WebSocketServerProtocol, ConnectionClosedError
+from websockets.legacy.server import WebSocketServer
 
-from py_netgames_server.server import Server
+from py_netgames_server.game_server import GameServer
 
 
-class MainLoop:
+class WebSocketServerBuilder:
     _deserializer: WebhookPayloadDeserializer
-    _server: Server
+    _server: GameServer
     _logger: logging.Logger
 
     def __init__(self) -> None:
         super().__init__()
-        port = 8765
         self._deserializer = WebhookPayloadDeserializer()
-        self._server = Server()
+        self._server = GameServer()
         self._logger = logging.getLogger("server.MainLoop")
-        game_server = websockets.serve(self.listen, "localhost", port)
-        asyncio.get_event_loop().run_until_complete(game_server)
+
+    async def async_serve(self, port=8765) -> WebSocketServer:
+        return await websockets.serve(self.listen, "localhost", port)
+
+    def serve(self, port=8765):
+        asyncio.get_event_loop().run_until_complete(websockets.serve(self.listen, "localhost", port))
         self._logger.info(f"Server listening at port {port}")
         asyncio.get_event_loop().run_forever()
 

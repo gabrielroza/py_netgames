@@ -2,12 +2,14 @@ import asyncio
 import threading
 from abc import ABC
 from asyncio import AbstractEventLoop
+from concurrent.futures import Future
 from typing import Dict
 from uuid import UUID
 
 from py_netgames_model.messaging.deserializer import WebhookPayloadDeserializer
 from py_netgames_model.messaging.message import MoveMessage, MatchRequestMessage, MatchStartedMessage
 from py_netgames_model.messaging.webhook_payload import WebhookPayloadType
+from py_netgames_server.websocket_server_builder import WebSocketServerBuilder
 from websockets import client, WebSocketClientProtocol
 
 from gameclient.id.IdentifierFileGenerator import IdentifierFileGenerator
@@ -54,12 +56,22 @@ class BaseWebsocketProxy(ABC):
     def _move_sent_success(self):
         raise NotImplementedError()
 
-    def connect(self, address: str) -> None:
+    def connect(self, address: str, run_server_on_miss: bool = True) -> None:
         async def async_connect():
-            try:
+
+            async def attempt_connection():
                 self._websocket = await client.connect("ws://" + address)
                 self._listen()
                 self._connection_success()
+
+            try:
+                await attempt_connection()
+            except ConnectionRefusedError as connection_refused_error:
+                if run_server_on_miss:
+                    await WebSocketServerBuilder().async_serve()
+                    await attempt_connection()
+                else:
+                    return self._error(connection_refused_error)
             except Exception as e:
                 return self._error(e)
 
@@ -107,5 +119,5 @@ class BaseWebsocketProxy(ABC):
 
         self._run(target=async_listen)
 
-    def _run(self, target):
-        asyncio.run_coroutine_threadsafe(target(), self._loop)
+    def _run(self, target) -> Future:
+        return asyncio.run_coroutine_threadsafe(target(), self._loop)

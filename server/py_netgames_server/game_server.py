@@ -11,7 +11,7 @@ from py_netgames_server.match import Match
 T = TypeVar('T', bound=Message)
 
 
-class Server:
+class GameServer:
     _matches: Set[Match]
     _handle_map: Dict[Type[T], Callable[[T, WebSocketServerProtocol], Awaitable[None]]]
     _logger: Logger
