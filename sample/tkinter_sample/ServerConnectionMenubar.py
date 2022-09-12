@@ -1,7 +1,7 @@
 from tkinter import Tk, Menu
 from tkinter import simpledialog
 
-from gameclient.tkinterclient.TkinterWebsocketProxy import TkinterWebsocketProxy
+from py_netgames_client.tkinter_client.TkinterWebsocketProxy import TkinterWebsocketProxy
 
 
 class ServerConnectionMenubar(Menu):

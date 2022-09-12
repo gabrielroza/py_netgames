@@ -12,7 +12,7 @@ from py_netgames_model.messaging.webhook_payload import WebhookPayloadType
 from py_netgames_server.websocket_server_builder import WebSocketServerBuilder
 from websockets import client, WebSocketClientProtocol
 
-from gameclient.id.IdentifierFileGenerator import IdentifierFileGenerator
+from py_netgames_client.id.IdentifierFileGenerator import IdentifierFileGenerator
 
 
 class BaseWebsocketProxy(ABC):

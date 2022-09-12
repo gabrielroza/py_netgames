@@ -3,7 +3,7 @@ from typing import Optional
 import pygame
 from py_netgames_model.messaging.message import MoveMessage, MatchStartedMessage
 
-from gameclient.basic.BaseWebsocketProxy import BaseWebsocketProxy
+from py_netgames_client._base.BaseWebsocketProxy import BaseWebsocketProxy
 
 CONNECTED = pygame.event.custom_type()
 CONNECTION_ERROR = pygame.event.custom_type()

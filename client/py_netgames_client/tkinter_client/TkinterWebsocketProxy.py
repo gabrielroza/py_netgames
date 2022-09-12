@@ -2,8 +2,8 @@ from typing import List
 
 from py_netgames_model.messaging.message import MatchStartedMessage, MoveMessage
 
-from gameclient.basic.BaseWebsocketProxy import BaseWebsocketProxy
-from gameclient.tkinterclient.TkinterWebsocketListener import TkinterWebsocketListener
+from py_netgames_client._base.BaseWebsocketProxy import BaseWebsocketProxy
+from py_netgames_client.tkinter_client.TkinterWebsocketListener import TkinterWebsocketListener
 
 
 class TkinterWebsocketProxy(BaseWebsocketProxy):

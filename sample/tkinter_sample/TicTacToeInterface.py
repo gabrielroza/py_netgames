@@ -2,8 +2,8 @@ from tkinter import Tk, Button, Label, CENTER
 from typing import List, Any, Dict
 from uuid import UUID
 
-from gameclient.tkinterclient.TkinterWebsocketListener import TkinterWebsocketListener
-from gameclient.tkinterclient.TkinterWebsocketProxy import TkinterWebsocketProxy
+from py_netgames_client.tkinter_client.TkinterWebsocketListener import TkinterWebsocketListener
+from py_netgames_client.tkinter_client.TkinterWebsocketProxy import TkinterWebsocketProxy
 from py_netgames_model.messaging.message import MatchStartedMessage, MoveMessage
 
 from tictactoe.TicTacToeBoard import TicTacToeBoard, TicTacToeCoordinate

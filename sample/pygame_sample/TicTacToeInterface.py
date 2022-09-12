@@ -2,7 +2,7 @@ from pathlib import Path
 from typing import Tuple, List, Literal, Optional
 
 import pygame
-from gameclient.pygameclient.PygameWebsocketProxy import PygameWebsocketProxy, MOVE_RECEIVED, CONNECTION_ERROR
+from py_netgames_client.pygame_client.PygameWebsocketProxy import PygameWebsocketProxy, MOVE_RECEIVED, CONNECTION_ERROR
 from py_netgames_model.messaging.message import MatchStartedMessage, MoveMessage
 from pygame import MOUSEBUTTONDOWN
 from pygame.font import Font

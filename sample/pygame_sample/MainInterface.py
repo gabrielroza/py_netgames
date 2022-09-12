@@ -1,6 +1,6 @@
 import pygame
 import pygame_menu
-from gameclient.pygameclient.PygameWebsocketProxy import PygameWebsocketProxy, CONNECTED, CONNECTION_ERROR, \
+from py_netgames_client.pygame_client.PygameWebsocketProxy import PygameWebsocketProxy, CONNECTED, CONNECTION_ERROR, \
     DISCONNECTED, MATCH_REQUESTED, MATCH_STARTED
 from pygame_menu import Menu
 from pygame_menu.widgets import ToggleSwitch
