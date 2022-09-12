@@ -95,4 +95,12 @@ class TicTacToeInterface(TkinterWebsocketListener):
         self._update_screen()
 
     def receive_disconnect(self):
-        print("Disconnected")
+        self._ongoing_match = False
+        self._update_screen()
+
+    def connection_success(self):
+        self._menu_bar.connection_confirmed()
+
+    def error(self, error):
+        self._menu_bar.connection_error(error)
+

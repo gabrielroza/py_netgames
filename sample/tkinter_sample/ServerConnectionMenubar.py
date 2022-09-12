@@ -1,6 +1,5 @@
 from tkinter import Tk, Menu
 from tkinter import simpledialog
-from uuid import UUID
 
 from gameclient.tkinterclient.TkinterWebsocketProxy import TkinterWebsocketProxy
 
@@ -21,12 +20,22 @@ class ServerConnectionMenubar(Menu):
     def _connect(self):
         user_input = simpledialog.askstring("Server address", "Server address", initialvalue="localhost:8765")
         self._websocket.connect(user_input)
+        self._connect_dropdown.entryconfig("Disconnect", state="disabled")
+        self._connect_dropdown.entryconfig("Connect", state="disabled")
+        self._match_dropdown.entryconfig("Request Match", state="disabled")
+
+    def disconnect(self):
+        self._websocket.disconnect()
+        self._connect_dropdown.entryconfig("Disconnect", state="disabled")
+        self._connect_dropdown.entryconfig("Connect", state="normal")
+        self._match_dropdown.entryconfig("Request Match", state="disabled")
+
+    def connection_confirmed(self):
         self._connect_dropdown.entryconfig("Disconnect", state="normal")
         self._connect_dropdown.entryconfig("Connect", state="disabled")
         self._match_dropdown.entryconfig("Request Match", state="normal")
 
-    def disconnect(self):
-        self._websocket.disconnect()
+    def connection_error(self, error: Exception):
         self._connect_dropdown.entryconfig("Disconnect", state="disabled")
         self._connect_dropdown.entryconfig("Connect", state="normal")
         self._match_dropdown.entryconfig("Request Match", state="disabled")
