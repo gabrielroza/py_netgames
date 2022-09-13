@@ -35,28 +35,7 @@ class BaseWebsocketProxy(ABC):
         self._thread = threading.Thread(target=start_background_loop, args=(self._loop,))
         self._thread.start()
 
-    def _receive_match_start(self, match: MatchStartedMessage):
-        raise NotImplementedError()
-
-    def _receive_move(self, move: MoveMessage):
-        raise NotImplementedError()
-
-    def _disconnection(self):
-        raise NotImplementedError()
-
-    def _connection_success(self):
-        raise NotImplementedError()
-
-    def _error(self, error: Exception):
-        raise NotImplementedError()
-
-    def _match_requested_success(self):
-        raise NotImplementedError()
-
-    def _move_sent_success(self):
-        raise NotImplementedError()
-
-    def connect(self, address: str, run_server_on_miss: bool = True) -> None:
+    def send_connect(self, address: str, run_server_on_miss: bool = True) -> None:
         async def async_connect():
 
             async def attempt_connection():
@@ -77,7 +56,7 @@ class BaseWebsocketProxy(ABC):
 
         self._run(target=async_connect)
 
-    def disconnect(self) -> None:
+    def send_disconnect(self) -> None:
         async def async_disconnect():
             try:
                 await self._websocket.close()
@@ -87,12 +66,33 @@ class BaseWebsocketProxy(ABC):
 
         self._run(target=async_disconnect)
 
-    def request_match(self, amount_of_players: int):
+    def send_match(self, amount_of_players: int):
         self._send(MatchRequestMessage(self._game_id, amount_of_players).to_payload().to_json(),
                    self._match_requested_success)
 
     def send_move(self, match_id: UUID, payload: Dict[str, any]) -> None:
         self._send(MoveMessage(match_id, payload).to_payload().to_json(), self._move_sent_success)
+
+    def _receive_match_start(self, match: MatchStartedMessage):
+        raise NotImplementedError()
+
+    def _receive_move(self, move: MoveMessage):
+        raise NotImplementedError()
+
+    def _disconnection(self):
+        raise NotImplementedError()
+
+    def _connection_success(self):
+        raise NotImplementedError()
+
+    def _error(self, error: Exception):
+        raise NotImplementedError()
+
+    def _match_requested_success(self):
+        raise NotImplementedError()
+
+    def _move_sent_success(self):
+        raise NotImplementedError()
 
     def _send(self, message: str, on_success) -> None:
         async def async_send():

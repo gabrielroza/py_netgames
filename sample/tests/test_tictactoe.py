@@ -53,7 +53,7 @@ class TicTacToeTest(unittest.TestCase):
         ]
 
         for winning_board_configuration in winning_board_configurations:
-            self.assertEqual(TicTacToeMark.CROSS, TicTacToeBoard(board=winning_board_configuration).get_winner())
+            self.assertEqual(TicTacToeMark.CROSS, TicTacToeBoard(board=winning_board_configuration)._get_winner())
 
     def test_handles_different_marks(self):
         board_with_both_symbols = [
@@ -62,25 +62,25 @@ class TicTacToeTest(unittest.TestCase):
             [None, TicTacToeMark.CIRCLE, None]
         ]
 
-        self.assertEqual(TicTacToeMark.CROSS, TicTacToeBoard(board=board_with_both_symbols).get_winner())
+        self.assertEqual(TicTacToeMark.CROSS, TicTacToeBoard(board=board_with_both_symbols)._get_winner())
 
     def test_handles_ordered_marking(self):
         board = TicTacToeBoard()
-        self.assertIsNone(board.get_winner())
+        self.assertIsNone(board._get_winner())
         board.mark((0, 0))
-        self.assertIsNone(board.get_winner())
+        self.assertIsNone(board._get_winner())
         board.flip()
         board.mark((1, 0))
-        self.assertIsNone(board.get_winner())
+        self.assertIsNone(board._get_winner())
         board.flip()
         board.mark((0, 1))
-        self.assertIsNone(board.get_winner())
+        self.assertIsNone(board._get_winner())
         board.flip()
         board.mark((1, 1))
-        self.assertIsNone(board.get_winner())
+        self.assertIsNone(board._get_winner())
         board.flip()
         board.mark((0, 2))
-        self.assertEqual(TicTacToeMark.CROSS, board.get_winner())
+        self.assertEqual(TicTacToeMark.CROSS, board._get_winner())
 
     def test_handles_mark_same_spot(self):
         board = TicTacToeBoard()
@@ -94,7 +94,7 @@ class TicTacToeTest(unittest.TestCase):
             [TicTacToeMark.CIRCLE, TicTacToeMark.CROSS, TicTacToeMark.CIRCLE]
         ]
 
-        self.assertRaises(StalemateException, TicTacToeBoard(board=board_with_both_symbols).get_winner)
+        self.assertRaises(StalemateException, TicTacToeBoard(board=board_with_both_symbols)._get_winner)
 
     def test_serializes_back_and_forth(self):
         board = [

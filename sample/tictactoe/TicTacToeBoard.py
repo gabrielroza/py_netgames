@@ -25,6 +25,10 @@ class TicTacToeBoard:
         self._mark = TicTacToeMark.CROSS if self._is_turn else TicTacToeMark.CIRCLE
         super().__init__()
 
+    @classmethod
+    def get_coordinates(cls) -> List[TicTacToeCoordinate]:
+        return [(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2), (2, 0), (2, 1), (2, 2)]
+
     def mark(self, coordinate: TicTacToeCoordinate) -> bool:
         if self._is_turn and not self._board[coordinate[0]][coordinate[1]]:
             self._board[coordinate[0]][coordinate[1]] = self._mark
@@ -33,7 +37,20 @@ class TicTacToeBoard:
         else:
             return False
 
-    def get_winner(self) -> Optional[TicTacToeMark]:
+    def get_filled_coordinates(self) -> Dict[TicTacToeCoordinate, TicTacToeMark]:
+        return {
+            (row_index, column_index): value for row_index, row in enumerate(self._board) for column_index, value in enumerate(row) if value
+        }
+
+    def flip(self):
+        self._is_turn = not self._is_turn
+        self._mark = {
+            TicTacToeMark.CROSS: TicTacToeMark.CIRCLE,
+            TicTacToeMark.CIRCLE: TicTacToeMark.CROSS
+        }[self._mark]
+        return self
+
+    def _get_winner(self) -> Optional[TicTacToeMark]:
         winning_coordinates: List[List[TicTacToeCoordinate]] = [
             [(0, 0), (0, 1), (0, 2)],
             [(1, 0), (1, 1), (1, 2)],
@@ -60,28 +77,11 @@ class TicTacToeBoard:
             if None not in list(itertools.chain.from_iterable(self._board)):
                 raise StalemateException()
 
-    @classmethod
-    def get_coordinates(cls) -> List[TicTacToeCoordinate]:
-        return [(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2), (2, 0), (2, 1), (2, 2)]
-
-    def get_filled_coordinates(self) -> Dict[TicTacToeCoordinate, TicTacToeMark]:
-        return {
-            (row_index, column_index): value for row_index, row in enumerate(self._board) for column_index, value in enumerate(row) if value
-        }
-
-    def flip(self):
-        self._is_turn = not self._is_turn
-        self._mark = {
-            TicTacToeMark.CROSS: TicTacToeMark.CIRCLE,
-            TicTacToeMark.CIRCLE: TicTacToeMark.CROSS
-        }[self._mark]
-        return self
-
     def get_state(self) -> TicTacToeState:
         game_over = False
         try:
-            if self.get_winner():
-                message = self.get_winner() + " won"
+            if self._get_winner():
+                message = self._get_winner() + " won"
                 game_over = True
             elif self._is_turn:
                 message = "Make your move"

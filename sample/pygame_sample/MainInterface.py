@@ -99,10 +99,10 @@ class MainInterface:
     def _connect(self, state: str):
         if state == 'Connecting':
             print(f"""Connecting to: {self._main_menu.get_widget("address").get_value()}""")
-            self._websocket.connect(self._main_menu.get_widget("address").get_value())
+            self._websocket.send_connect(self._main_menu.get_widget("address").get_value())
             self._main_menu.get_widget('connect').readonly = True
         elif state == 'Disconnecting':
-            self._websocket.disconnect()
+            self._websocket.send_disconnect()
             self._main_menu.get_widget('connect').set_value(3)
             self._main_menu.get_widget('connect').readonly = True
 
@@ -110,6 +110,6 @@ class MainInterface:
         if state == 'Request':
             raise NotImplementedError()
         elif state == 'Awaiting players':
-            self._websocket.request_match(
+            self._websocket.send_match(
                 amount_of_players=2
             )

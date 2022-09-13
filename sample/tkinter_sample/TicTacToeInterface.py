@@ -55,10 +55,9 @@ class TicTacToeInterface(TkinterWebsocketListener):
             self._label.configure(text=state.description)
 
             if state.game_over:
-                self._menu_bar.disconnect()
                 self._board = None
                 self._ongoing_match = False
-                self._tk.after(3000, self._update_screen)
+                self._tk.after(3000, self._menu_bar.disconnect)
 
         else:
             [button.destroy() for button in self._buttons.values()]
@@ -66,7 +65,7 @@ class TicTacToeInterface(TkinterWebsocketListener):
             if self._label:
                 self._label.destroy()
                 self._label = None
-            self._buttons = {coordinate: build_button(coordinate, None) for coordinate in
+            self._buttons = {coordinate: build_button(coordinate) for coordinate in
                              TicTacToeBoard.get_coordinates()}
             self._label = Label(self._tk, text="Awaiting match", anchor=CENTER)
             self._label.grid(row=3, column=1)
@@ -83,7 +82,7 @@ class TicTacToeInterface(TkinterWebsocketListener):
             self._websocket.send_move(self.match_id, self._board.to_dict())
             self._update_screen()
 
-    def match_started(self, message: MatchStartedMessage):
+    def receive_match(self, message: MatchStartedMessage):
         self._ongoing_match = True
         self.match_id = message.match_id
         self._board = TicTacToeBoard(position=message.position)
@@ -98,9 +97,9 @@ class TicTacToeInterface(TkinterWebsocketListener):
         self._ongoing_match = False
         self._update_screen()
 
-    def connection_success(self):
+    def receive_connection_success(self):
         self._menu_bar.connection_confirmed()
 
-    def error(self, error):
+    def receive_error(self, error):
         self._menu_bar.connection_error(error)
 

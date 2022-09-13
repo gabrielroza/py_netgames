@@ -113,5 +113,5 @@ class TicTacToeInterface:
 
         if state.game_over:
             pygame.time.wait(3000)
-            self._websocket.disconnect()
+            self._websocket.send_disconnect()
             self._is_running = False
