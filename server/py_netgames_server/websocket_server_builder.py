@@ -24,10 +24,10 @@ class WebSocketServerBuilder:
         asyncio.get_event_loop().run_until_complete(websockets.serve(self.listen, "localhost", port))
         asyncio.get_event_loop().run_forever()
 
-    async def listen(self, websocket: WebSocketServerProtocol, _: str):
+    async def listen(self, websocket: WebSocketServerProtocol):
         try:
             async for message in websocket:
                 await self._server.handle_message(self._deserializer.deserialize(message), websocket)
             await self._server.handle_disconnect(websocket)
-        except ConnectionClosedError as error:
+        except ConnectionClosedError:
             await self._server.handle_disconnect(websocket)

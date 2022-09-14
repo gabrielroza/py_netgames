@@ -23,7 +23,7 @@ class GameServer:
             MatchRequestMessage: self._start_match,
             MoveMessage: self._move
         }
-        self._logger = logging.getLogger("py_netgames_server.GameServer")
+        self._logger = logging.getLogger("py_netgames_server")
 
     async def handle_message(self, message: Message, sender: WebSocketServerProtocol):
         self._logger.info(f"Handling message {message}")
