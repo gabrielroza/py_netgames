@@ -19,7 +19,7 @@ def setup_arg_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         '-p', '--port',
-        help="Debug websocket connections",
+        help="Server port",
         dest="port", default=8765
     )
     return parser
