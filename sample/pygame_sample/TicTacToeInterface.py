@@ -2,7 +2,7 @@ from pathlib import Path
 from typing import Tuple, List, Literal, Optional
 
 import pygame
-from py_netgames_client.pygame_client.PygameWebsocketProxy import PygameWebsocketProxy, MOVE_RECEIVED, CONNECTION_ERROR
+from py_netgames_client.pygame_client.PyNetgamesServerProxy import PyNetgamesServerProxy, MOVE_RECEIVED, CONNECTION_ERROR
 from py_netgames_model.messaging.message import MatchStartedMessage, MoveMessage
 from pygame import MOUSEBUTTONDOWN
 from pygame.font import Font
@@ -16,15 +16,15 @@ from tictactoe.TicTacToeMark import TicTacToeMark
 
 class TicTacToeInterface:
     _board: TicTacToeBoard
-    _websocket: PygameWebsocketProxy
+    _server_proxy: PyNetgamesServerProxy
     _is_running: bool
     _surface: pygame.Surface
 
-    def __init__(self, message: MatchStartedMessage, surface: pygame.Surface, websocket: PygameWebsocketProxy) -> None:
+    def __init__(self, message: MatchStartedMessage, surface: pygame.Surface, server_proxy: PyNetgamesServerProxy) -> None:
         super().__init__()
         self.match_id = message.match_id
         self._surface = surface
-        self._websocket = websocket
+        self._server_proxy = server_proxy
         self._board = TicTacToeBoard(message.position)
         self._is_running = True
         self._setup()
@@ -60,7 +60,7 @@ class TicTacToeInterface:
         marked = self._board.mark(clicked_board_coordinate) if clicked_board_coordinate is not None else False
 
         if marked:
-            self._websocket.send_move(self.match_id, self._board.to_dict())
+            self._server_proxy.send_move(self.match_id, self._board.to_dict())
             self._update_screen()
 
     def _get_board_coordinate_from_click(self, mouse_position: Tuple[int, int]) -> Optional[TicTacToeCoordinate]:
@@ -113,5 +113,5 @@ class TicTacToeInterface:
 
         if state.game_over:
             pygame.time.wait(3000)
-            self._websocket.send_disconnect()
+            self._server_proxy.send_disconnect()
             self._is_running = False

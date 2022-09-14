@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "124d7082e01455af57be6098efdb0fe4fcaf57857c3a3754fe770642b977ba11"
+            "sha256": "f76907eba723b9e20fdc14443c1f3e73fc9cd680a1555819d8f4cf6c3d53eb54"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -260,6 +260,9 @@
             ],
             "markers": "python_version >= '3.6'",
             "version": "==21.3"
+        },
+        "py-netgames-client": {
+            "path": "./../client"
         },
         "py-netgames-model": {
             "hashes": [

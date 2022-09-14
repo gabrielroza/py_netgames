@@ -1,6 +1,6 @@
 import pygame
 import pygame_menu
-from py_netgames_client.pygame_client.PygameWebsocketProxy import PygameWebsocketProxy, CONNECTED, CONNECTION_ERROR, \
+from py_netgames_client.pygame_client.PyNetgamesServerProxy import PyNetgamesServerProxy, CONNECTED, CONNECTION_ERROR, \
     DISCONNECTED, MATCH_REQUESTED, MATCH_STARTED
 from pygame_menu import Menu
 from pygame_menu.widgets import ToggleSwitch
@@ -13,14 +13,14 @@ class MainInterface:
     _is_running: bool
     _surface: pygame.Surface
     _main_menu: Menu
-    _websocket: PygameWebsocketProxy
+    _server_proxy: PyNetgamesServerProxy
 
     def __init__(self) -> None:
         pygame.init()
         self._surface = pygame.display.set_mode([WINDOW_WIDTH, WINDOW_HEIGHT], pygame.RESIZABLE)
         self._main_menu = self._build_main_menu()
         self._is_running = True
-        self._websocket = PygameWebsocketProxy()
+        self._server_proxy = PyNetgamesServerProxy()
 
     def run(self):
         while self._is_running:
@@ -46,7 +46,7 @@ class MainInterface:
                     self._main_menu.get_widget('request').set_value(1)
                 elif event.type == MATCH_STARTED:
                     print(f"Match started with position {event.message}")
-                    TicTacToeInterface(event.message, self._surface, self._websocket)
+                    TicTacToeInterface(event.message, self._surface, self._server_proxy)
                     self._main_menu.select_widget('connect')
                     self._main_menu.get_widget('connect').readonly = False
                     self._main_menu.get_widget('connect').set_value(0)
@@ -99,10 +99,10 @@ class MainInterface:
     def _connect(self, state: str):
         if state == 'Connecting':
             print(f"""Connecting to: {self._main_menu.get_widget("address").get_value()}""")
-            self._websocket.send_connect(self._main_menu.get_widget("address").get_value())
+            self._server_proxy.send_connect(self._main_menu.get_widget("address").get_value())
             self._main_menu.get_widget('connect').readonly = True
         elif state == 'Disconnecting':
-            self._websocket.send_disconnect()
+            self._server_proxy.send_disconnect()
             self._main_menu.get_widget('connect').set_value(3)
             self._main_menu.get_widget('connect').readonly = True
 
@@ -110,6 +110,6 @@ class MainInterface:
         if state == 'Request':
             raise NotImplementedError()
         elif state == 'Awaiting players':
-            self._websocket.send_match(
+            self._server_proxy.send_match(
                 amount_of_players=2
             )

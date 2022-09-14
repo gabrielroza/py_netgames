@@ -3,7 +3,7 @@ from abc import ABC
 from py_netgames_model.messaging.message import MatchStartedMessage, MoveMessage
 
 
-class TkinterWebsocketListener(ABC):
+class PyNetgamesServerListener(ABC):
 
     def __init__(self) -> None:
         super().__init__()

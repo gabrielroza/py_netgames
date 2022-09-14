@@ -1,9 +1,9 @@
 from tkinter import Tk, Button, Label, CENTER
-from typing import List, Any, Dict
+from typing import Dict
 from uuid import UUID
 
-from py_netgames_client.tkinter_client.TkinterWebsocketListener import TkinterWebsocketListener
-from py_netgames_client.tkinter_client.TkinterWebsocketProxy import TkinterWebsocketProxy
+from py_netgames_client.tkinter_client.PyNetgamesServerListener import PyNetgamesServerListener
+from py_netgames_client.tkinter_client.PyNetgamesServerProxy import PyNetgamesServerProxy
 from py_netgames_model.messaging.message import MatchStartedMessage, MoveMessage
 
 from tictactoe.TicTacToeBoard import TicTacToeBoard, TicTacToeCoordinate
@@ -12,9 +12,9 @@ from tkinter_sample import WINDOW_WIDTH, WINDOW_HEIGHT
 from tkinter_sample.ServerConnectionMenubar import ServerConnectionMenubar
 
 
-class TicTacToeInterface(TkinterWebsocketListener):
+class TicTacToeInterface(PyNetgamesServerListener):
     _tk: Tk
-    _websocket: TkinterWebsocketProxy
+    _server_proxy: PyNetgamesServerProxy
     _menu_bar = ServerConnectionMenubar
     _ongoing_match: bool
     _match_id: UUID
@@ -31,8 +31,8 @@ class TicTacToeInterface(TkinterWebsocketListener):
             return tk
 
         self._tk = _setup_tk()
-        self._websocket = TkinterWebsocketProxy()
-        self._menu_bar = ServerConnectionMenubar(self._websocket, self._tk)
+        self._server_proxy = PyNetgamesServerProxy()
+        self._menu_bar = ServerConnectionMenubar(self._server_proxy, self._tk)
         self._ongoing_match = False
         self.match_id = None
         self._board = None
@@ -73,13 +73,13 @@ class TicTacToeInterface(TkinterWebsocketListener):
     def run(self):
         self._tk.config(menu=self._menu_bar)
         self._update_screen()
-        self._websocket.add_listener(self)
+        self._server_proxy.add_listener(self)
         self._tk.mainloop()
 
     def _handle_click(self, coordinate: TicTacToeCoordinate):
         print(coordinate)
         if self._ongoing_match and self._board.mark(coordinate):
-            self._websocket.send_move(self.match_id, self._board.to_dict())
+            self._server_proxy.send_move(self.match_id, self._board.to_dict())
             self._update_screen()
 
     def receive_match(self, message: MatchStartedMessage):

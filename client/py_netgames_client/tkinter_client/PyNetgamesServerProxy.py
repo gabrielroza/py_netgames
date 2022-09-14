@@ -3,17 +3,17 @@ from typing import List
 from py_netgames_model.messaging.message import MatchStartedMessage, MoveMessage
 
 from py_netgames_client._base.BaseWebsocketProxy import BaseWebsocketProxy
-from py_netgames_client.tkinter_client.TkinterWebsocketListener import TkinterWebsocketListener
+from py_netgames_client.tkinter_client.PyNetgamesServerListener import PyNetgamesServerListener
 
 
-class TkinterWebsocketProxy(BaseWebsocketProxy):
-    _listeners: List[TkinterWebsocketListener]
+class PyNetgamesServerProxy(BaseWebsocketProxy):
+    _listeners: List[PyNetgamesServerListener]
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self._listeners = []
 
-    def add_listener(self, listener: TkinterWebsocketListener):
+    def add_listener(self, listener: PyNetgamesServerListener):
         self._listeners.append(listener)
 
     def _receive_match_start(self, match: MatchStartedMessage):

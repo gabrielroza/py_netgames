@@ -1,5 +1,3 @@
-from typing import Optional
-
 import pygame
 from py_netgames_model.messaging.message import MoveMessage, MatchStartedMessage
 
@@ -14,7 +12,7 @@ MOVE_RECEIVED = pygame.event.custom_type()
 DISCONNECTED = pygame.event.custom_type()
 
 
-class PygameWebsocketProxy(BaseWebsocketProxy):
+class PyNetgamesServerProxy(BaseWebsocketProxy):
     _pygame: pygame
 
     def __init__(self, *args, **kwargs) -> None:
