@@ -10,7 +10,7 @@ from websockets import WebSocketServerProtocol
 class Match:
     game_id: UUID
     id: UUID = field(default_factory=uuid4)
-    amount_of_players: int = field(default_factory=2)
+    amount_of_players: int = field(default_factory=lambda: 2)
     players: FrozenSet[WebSocketServerProtocol] = field(default_factory=frozenset)
 
     @classmethod
