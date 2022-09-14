@@ -37,12 +37,6 @@ class BaseWebsocketProxy(ABC):
         self._thread = threading.Thread(target=start_background_loop, args=(self._loop,))
         self._thread.start()
 
-    def _open(self):
-        return self._websocket and self._websocket.open
-
-    def _closed(self):
-        return not self._open()
-
     def send_connect(self, address: str, run_server_on_miss: bool = True) -> None:
 
         if self._open():
@@ -68,20 +62,6 @@ class BaseWebsocketProxy(ABC):
 
         self._run(target=async_connect)
 
-    def send_disconnect(self) -> None:
-
-        if self._closed():
-            return warnings.warn(f"Call to send_disconnect when there is no active connection", stacklevel=2)
-
-        async def async_disconnect():
-            try:
-                await self._websocket.close()
-                return self._disconnection()
-            except Exception as e:
-                return self._error(e)
-
-        self._run(target=async_disconnect)
-
     def send_match(self, amount_of_players: int) -> None:
 
         if self._closed():
@@ -96,6 +76,20 @@ class BaseWebsocketProxy(ABC):
             return warnings.warn(f"Call to send_move when there is no active connection", stacklevel=2)
 
         self._send(MoveMessage(match_id, payload).to_payload().to_json(), self._move_sent_success)
+
+    def send_disconnect(self) -> None:
+
+        if self._closed():
+            return warnings.warn(f"Call to send_disconnect when there is no active connection", stacklevel=2)
+
+        async def async_disconnect():
+            try:
+                await self._websocket.close()
+                return self._disconnection()
+            except Exception as e:
+                return self._error(e)
+
+        self._run(target=async_disconnect)
 
     def _receive_match_start(self, match: MatchStartedMessage):
         raise NotImplementedError()
@@ -142,6 +136,12 @@ class BaseWebsocketProxy(ABC):
                 return self._error(e)
 
         self._run(target=async_listen)
+
+    def _open(self):
+        return self._websocket and self._websocket.open
+
+    def _closed(self):
+        return not self._open()
 
     def _run(self, target) -> Future:
         return asyncio.run_coroutine_threadsafe(target(), self._loop)
