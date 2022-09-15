@@ -2,7 +2,7 @@ import asyncio
 import logging
 import threading
 import warnings
-from abc import ABC
+from abc import ABC, abstractmethod
 from asyncio import AbstractEventLoop
 from concurrent.futures import Future
 from typing import Optional, Dict
@@ -40,15 +40,15 @@ class BaseWebsocketProxy(ABC):
         self._thread.start()
         self._logger = logging.getLogger("py_netgames_client")
 
-    def send_connect(self, address: str, run_server_on_miss: bool = True) -> None:
+    def send_connect(self, address: str, run_server_when_connection_refused: bool = True) -> None:
 
         if not isinstance(address, str):
             return warnings.warn(self._invalid_type_message(address, "address", "send_connect", "str"), stacklevel=2)
 
-        if not isinstance(run_server_on_miss, bool):
+        if not isinstance(run_server_when_connection_refused, bool):
             return warnings.warn(
-                self._invalid_type_message(run_server_on_miss, "run_server_on_miss", "send_connect", "bool"),
-                stacklevel=2)
+                self._invalid_type_message(run_server_when_connection_refused, "run_server_when_connection_refused",
+                                           "send_connect", "bool"), stacklevel=2)
 
         if self._open():
             return warnings.warn(f"Call to send_connect when connection is already active.", stacklevel=2)
@@ -63,7 +63,7 @@ class BaseWebsocketProxy(ABC):
             try:
                 await attempt_connection()
             except ConnectionRefusedError as connection_refused_error:
-                if run_server_on_miss:
+                if run_server_when_connection_refused:
                     await WebSocketServerBuilder().async_serve()
                     await attempt_connection()
                 else:
@@ -128,24 +128,31 @@ class BaseWebsocketProxy(ABC):
 
         self._run(target=async_disconnect)
 
+    @abstractmethod
     def _receive_match_start(self, match: MatchStartedMessage):
         raise NotImplementedError()
 
+    @abstractmethod
     def _receive_move(self, move: MoveMessage):
         raise NotImplementedError()
 
+    @abstractmethod
     def _disconnection(self):
         raise NotImplementedError()
 
+    @abstractmethod
     def _connection_success(self):
         raise NotImplementedError()
 
+    @abstractmethod
     def _error(self, error: Exception):
         raise NotImplementedError()
 
+    @abstractmethod
     def _match_requested_success(self):
         raise NotImplementedError()
 
+    @abstractmethod
     def _move_sent_success(self):
         raise NotImplementedError()
 
