@@ -21,6 +21,7 @@ class TicTacToeInterface(PyNetgamesServerListener):
     _match_id: UUID
     _board: TicTacToeBoard
     _buttons: Dict[TicTacToeCoordinate, Button]
+    _logger: logging.Logger
 
     def __init__(self) -> None:
         super().__init__()
@@ -39,6 +40,7 @@ class TicTacToeInterface(PyNetgamesServerListener):
         self._board = None
         self._buttons = {}
         self._label = None
+        self._logger = logging.getLogger("tkinter_sample.TicTacToeInterface")
 
     def _update_screen(self):
         def build_button(coordinate: TicTacToeCoordinate, value: TicTacToeMark = None) -> Button:
@@ -78,7 +80,6 @@ class TicTacToeInterface(PyNetgamesServerListener):
         self._tk.mainloop()
 
     def _handle_click(self, coordinate: TicTacToeCoordinate):
-        print(coordinate)
         if self._ongoing_match and self._board.mark(coordinate):
             self._server_proxy.send_move(self.match_id, self._board.to_dict())
             self._update_screen()
@@ -97,6 +98,7 @@ class TicTacToeInterface(PyNetgamesServerListener):
         self._update_screen()
 
     def receive_error(self, error):
+        self._logger.error(error)
         self._menu_bar.connection_error(error)
         self._ongoing_match = False
         self._update_screen()
@@ -105,4 +107,3 @@ class TicTacToeInterface(PyNetgamesServerListener):
         self._menu_bar.disconnect()
         self._ongoing_match = False
         self._update_screen()
-

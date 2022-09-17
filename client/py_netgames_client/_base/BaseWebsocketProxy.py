@@ -44,7 +44,7 @@ class BaseWebsocketProxy(ABC):
         self._thread.setDaemon(True)
         self._thread.start()
 
-    def send_connect(self, address: str, run_server_when_connection_refused: bool = True) -> None:
+    def send_connect(self, address: str = "localhost:8765", run_server_when_connection_refused: bool = True) -> None:
 
         if not isinstance(address, str):
             return warnings.warn(self._invalid_type_message(address, "address", "send_connect", "str"), stacklevel=2)
@@ -59,18 +59,20 @@ class BaseWebsocketProxy(ABC):
 
         async def async_connect():
 
-            async def attempt_connection():
-                self._websocket = await client.connect("ws://" + address)
+            async def attempt_connection(url):
+                self._websocket = await client.connect("ws://" + url)
                 self._listen()
                 self._connection_success()
 
             try:
-                await attempt_connection()
+                await attempt_connection(address)
             except ConnectionRefusedError as connection_refused_error:
                 if run_server_when_connection_refused:
                     try:
+                        logging.getLogger("websockets.server").addFilter(
+                            lambda record: logging.getLogger().level <= logging.DEBUG)
                         await WebSocketServerBuilder().async_serve()
-                        await attempt_connection()
+                        await attempt_connection("localhost:8765")
                     except Exception as e:
                         return self._error(e)
                 else:
@@ -178,6 +180,7 @@ class BaseWebsocketProxy(ABC):
             try:
                 async for message in self._websocket:
                     message = self.__deserializer.deserialize(message)
+                    self._logger.debug(f"Message received: {message}")
                     if WebhookPayloadType.MATCH_STARTED == message.type():
                         self._receive_match_start(message)
                     elif WebhookPayloadType.MOVE == message.type():

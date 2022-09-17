@@ -15,7 +15,7 @@ def setup_arg_parser() -> argparse.ArgumentParser:
         '-d', '--debug',
         help="Debug websocket connections",
         action="store_const", dest="log_level", const=logging.DEBUG,
-        default=logging.INFO
+        default=logging.ERROR
     )
     parser.add_argument(
         '-p', '--port',

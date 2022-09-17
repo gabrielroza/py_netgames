@@ -72,7 +72,6 @@ class TicTacToeInterface:
             return 0 if position < first_third else 1 if position < middle else 2 if position < absolute_size else None
 
         board_coordinate = get_position(WINDOW_HEIGHT, y), get_position(WINDOW_WIDTH, x)
-        print(board_coordinate)
         return None if any(position is None for position in board_coordinate) else board_coordinate
 
     def _handle_move_received(self, message: MoveMessage):

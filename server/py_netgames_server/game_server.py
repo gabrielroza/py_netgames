@@ -26,7 +26,7 @@ class GameServer:
         self._logger = logging.getLogger("py_netgames_server")
 
     async def handle_message(self, message: Message, sender: WebSocketServerProtocol):
-        self._logger.info(f"Handling message {message}")
+        self._logger.debug(f"Handling message {message}")
         await self._handle_map[message.__class__](message, sender)
 
     async def handle_disconnect(self, disconnected_socket: WebSocketServerProtocol):
@@ -35,9 +35,9 @@ class GameServer:
             [await websocket.close(reason="Player disconnected") for websocket in match.players - {disconnected_socket}]
             if match in self._matches:
                 self._matches.remove(match)
-            self._logger.info(f"Dropped match with {len(match.players)} connections after player disconnected.")
+            self._logger.debug(f"Dropped match with {len(match.players)} connections after player disconnected.")
         except StopIteration:
-            self._logger.error(f"No match found for disconnected websocket.")
+            self._logger.debug(f"No match found for disconnected websocket.")
 
     async def _start_match(self, message: MatchRequestMessage, sender: WebSocketServerProtocol):
         try:

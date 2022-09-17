@@ -18,19 +18,6 @@ class ServerConnectionMenubar(Menu):
         self._connect_dropdown = self._build_connect_dropdown()
         self._match_dropdown = self._build_match_dropdown()
 
-    def _connect(self):
-        user_input = simpledialog.askstring("Server address", "Server address", initialvalue="localhost:8765")
-        self._server_proxy.send_connect(user_input)
-        self._connect_dropdown.entryconfig("Disconnect", state="disabled")
-        self._connect_dropdown.entryconfig("Connect", state="disabled")
-        self._match_dropdown.entryconfig("Request Match", state="disabled")
-
-    def disconnect(self):
-        self._server_proxy.send_disconnect()
-        self._connect_dropdown.entryconfig("Disconnect", state="disabled")
-        self._connect_dropdown.entryconfig("Connect", state="normal")
-        self._match_dropdown.entryconfig("Request Match", state="disabled")
-
     def connection_confirmed(self):
         self._connect_dropdown.entryconfig("Disconnect", state="normal")
         self._connect_dropdown.entryconfig("Connect", state="disabled")
@@ -41,8 +28,11 @@ class ServerConnectionMenubar(Menu):
         self._connect_dropdown.entryconfig("Connect", state="normal")
         self._match_dropdown.entryconfig("Request Match", state="disabled")
 
-    def _request_match(self):
-        self._server_proxy.send_match(amount_of_players=2)
+    def disconnect(self):
+        self._server_proxy.send_disconnect()
+        self._connect_dropdown.entryconfig("Disconnect", state="disabled")
+        self._connect_dropdown.entryconfig("Connect", state="normal")
+        self._match_dropdown.entryconfig("Request Match", state="disabled")
 
     def _build_connect_dropdown(self):
         connect = Menu(self, tearoff=0)
@@ -53,8 +43,17 @@ class ServerConnectionMenubar(Menu):
         self.add_cascade(label="Connection", menu=connect)
         return connect
 
+    def _connect(self):
+        self._server_proxy.send_connect()
+        self._connect_dropdown.entryconfig("Disconnect", state="disabled")
+        self._connect_dropdown.entryconfig("Connect", state="disabled")
+        self._match_dropdown.entryconfig("Request Match", state="disabled")
+
     def _build_match_dropdown(self):
         match = Menu(self, tearoff=0)
         match.add_command(label="Request Match", command=self._request_match, state='disabled')
         self.add_cascade(label="Match", menu=match)
         return match
+
+    def _request_match(self):
+        self._server_proxy.send_match(amount_of_players=2)

@@ -1,3 +1,5 @@
+import logging
+
 import pygame
 import pygame_menu
 from py_netgames_client.pygame_client.PyNetgamesServerProxy import PyNetgamesServerProxy, CONNECTED, CONNECTION_ERROR, \
@@ -14,6 +16,7 @@ class MainInterface:
     _surface: pygame.Surface
     _main_menu: Menu
     _server_proxy: PyNetgamesServerProxy
+    _logger: logging.Logger
 
     def __init__(self) -> None:
         pygame.init()
@@ -21,6 +24,7 @@ class MainInterface:
         self._main_menu = self._build_main_menu()
         self._is_running = True
         self._server_proxy = PyNetgamesServerProxy()
+        self._logger = logging.getLogger("pygame_sample.MainInterface")
 
     def run(self):
         while self._is_running:
@@ -36,7 +40,7 @@ class MainInterface:
                     self._main_menu.get_widget('request').readonly = True
                     self._main_menu.get_widget('request').set_value(0)
                 elif event.type == CONNECTION_ERROR:
-                    print(event.message)
+                    self._logger.error(event.message)
                     self._main_menu.get_widget('connect').readonly = False
                     self._main_menu.get_widget('connect').set_value(0)
                     self._main_menu.get_widget('request').readonly = True
@@ -45,7 +49,6 @@ class MainInterface:
                     self._main_menu.get_widget('request').readonly = True
                     self._main_menu.get_widget('request').set_value(1)
                 elif event.type == MATCH_STARTED:
-                    print(f"Match started with position {event.message}")
                     TicTacToeInterface(event.message, self._surface, self._server_proxy)
                     self._main_menu.select_widget('connect')
                     self._main_menu.get_widget('connect').readonly = False
@@ -61,7 +64,6 @@ class MainInterface:
 
     def _build_main_menu(self):
         main_menu = pygame_menu.Menu('TicTacToe', WINDOW_WIDTH, WINDOW_HEIGHT, theme=pygame_menu.themes.THEME_BLUE)
-        main_menu.add.text_input('Server address: ', default='localhost:8765', textinput_id='address')
         main_menu.select_widget(main_menu.add.generic_widget(self._build_connect_switch(), configure_defaults=True))
         main_menu.add.generic_widget(self._build_match_request_switch(), configure_defaults=True)
         main_menu.add.button('Quit', pygame_menu.events.EXIT)
@@ -98,8 +100,7 @@ class MainInterface:
 
     def _connect(self, state: str):
         if state == 'Connecting':
-            print(f"""Connecting to: {self._main_menu.get_widget("address").get_value()}""")
-            self._server_proxy.send_connect(self._main_menu.get_widget("address").get_value())
+            self._server_proxy.send_connect()
             self._main_menu.get_widget('connect').readonly = True
         elif state == 'Disconnecting':
             self._server_proxy.send_disconnect()
