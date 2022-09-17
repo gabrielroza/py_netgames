@@ -1,6 +1,6 @@
 import logging
 from tkinter import Tk, Button, Label, CENTER
-from typing import Dict
+from typing import Dict, Optional
 from uuid import UUID
 
 from py_netgames_client.tkinter_client.PyNetgamesServerListener import PyNetgamesServerListener
@@ -19,7 +19,7 @@ class TicTacToeInterface(PyNetgamesServerListener):
     _menu_bar = ServerConnectionMenubar
     _ongoing_match: bool
     _match_id: UUID
-    _board: TicTacToeBoard
+    _board: Optional[TicTacToeBoard]
     _buttons: Dict[TicTacToeCoordinate, Button]
     _logger: logging.Logger
 
