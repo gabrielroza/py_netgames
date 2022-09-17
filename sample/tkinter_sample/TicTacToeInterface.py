@@ -1,3 +1,4 @@
+import logging
 from tkinter import Tk, Button, Label, CENTER
 from typing import Dict
 from uuid import UUID
@@ -82,6 +83,9 @@ class TicTacToeInterface(PyNetgamesServerListener):
             self._server_proxy.send_move(self.match_id, self._board.to_dict())
             self._update_screen()
 
+    def receive_connection_success(self):
+        self._menu_bar.connection_confirmed()
+
     def receive_match(self, message: MatchStartedMessage):
         self._ongoing_match = True
         self.match_id = message.match_id
@@ -89,17 +93,13 @@ class TicTacToeInterface(PyNetgamesServerListener):
         self._update_screen()
 
     def receive_move(self, message: MoveMessage):
-        print(message)
         self._board = TicTacToeBoard.from_dict(message.payload).flip()
         self._update_screen()
+
+    def receive_error(self, error):
+        self._menu_bar.connection_error(error)
 
     def receive_disconnect(self):
         self._ongoing_match = False
         self._update_screen()
-
-    def receive_connection_success(self):
-        self._menu_bar.connection_confirmed()
-
-    def receive_error(self, error):
-        self._menu_bar.connection_error(error)
 

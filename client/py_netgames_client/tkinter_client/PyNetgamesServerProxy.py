@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Callable
 
 from py_netgames_model.messaging.message import MatchStartedMessage, MoveMessage
 
@@ -17,22 +17,31 @@ class PyNetgamesServerProxy(BaseWebsocketProxy):
         self._listeners.append(listener)
 
     def _receive_match_start(self, match: MatchStartedMessage):
-        [listener.receive_match(match) for listener in self._listeners]
+        [self._log_error(lambda: listener.receive_match(match)) for listener in self._listeners]
 
     def _receive_move(self, move: MoveMessage):
-        [listener.receive_move(move) for listener in self._listeners]
+        [self._log_error(lambda: listener.receive_move(move)) for listener in self._listeners]
 
     def _disconnection(self):
-        [listener.receive_disconnect() for listener in self._listeners]
+        [self._log_error(lambda: listener.receive_disconnect()) for listener in self._listeners]
 
     def _connection_success(self):
-        [listener.receive_connection_success() for listener in self._listeners]
+        [self._log_error(lambda: listener.receive_connection_success()) for listener in self._listeners]
 
     def _error(self, error: Exception):
-        [listener.receive_error(error) for listener in self._listeners]
+        [self._log_error(lambda: listener.receive_error(error)) for listener in self._listeners]
 
     def _match_requested_success(self):
-        [listener.receive_match_requested_success() for listener in self._listeners]
+        [self._log_error(lambda: listener.receive_match_requested_success()) for listener in self._listeners]
 
     def _move_sent_success(self):
-        [listener.receive_move_sent_success() for listener in self._listeners]
+        [self._log_error(lambda: listener.receive_move_sent_success()) for listener in self._listeners]
+
+    def _log_error(self, method: Callable):
+        try:
+            method()
+        except Exception as e:
+            try:
+                raise e from None
+            except Exception as e:
+                self._logger.exception(e)

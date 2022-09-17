@@ -64,8 +64,11 @@ class BaseWebsocketProxy(ABC):
                 await attempt_connection()
             except ConnectionRefusedError as connection_refused_error:
                 if run_server_when_connection_refused:
-                    await WebSocketServerBuilder().async_serve()
-                    await attempt_connection()
+                    try:
+                        await WebSocketServerBuilder().async_serve()
+                        await attempt_connection()
+                    except Exception as e:
+                        return self._error(e)
                 else:
                     return self._error(connection_refused_error)
             except Exception as e:
