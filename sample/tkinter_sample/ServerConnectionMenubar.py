@@ -1,6 +1,5 @@
 import sys
 from tkinter import Tk, Menu
-from tkinter import simpledialog
 
 from py_netgames_client.tkinter_client.PyNetgamesServerProxy import PyNetgamesServerProxy
 

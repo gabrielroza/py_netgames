@@ -4,8 +4,11 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+#Used only in pygame_sample. Necessary as unlike Tkinter, PyGame is not part of the Python Standard Library.
 pygame="*"
 pygame-menu="*"
+#Used in both pygame_sample and tkinter_sample.
+#In a tkinter project, this should be the only dependency required for py_netgames.
 py_netgames_client="*"
 
 [requires]
