@@ -1,4 +1,3 @@
-import os
 import sys
 from tkinter import Tk, Menu
 from tkinter import simpledialog
@@ -46,14 +45,11 @@ class ServerConnectionMenubar(Menu):
         self._server_proxy.send_match(amount_of_players=2)
 
     def _build_connect_dropdown(self):
-        def exit():
-            os._exit(0)
-
         connect = Menu(self, tearoff=0)
         connect.add_command(label="Connect", command=self._connect)
         connect.add_command(label="Disconnect", command=self.disconnect, state='disabled')
         connect.add_separator()
-        connect.add_command(label="Exit", command=exit)
+        connect.add_command(label="Exit", command=sys.exit)
         self.add_cascade(label="Connection", menu=connect)
         return connect
 

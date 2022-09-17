@@ -41,6 +41,7 @@ class BaseWebsocketProxy(ABC):
             loop.run_forever()
 
         self._thread = threading.Thread(target=start_background_loop, args=(self._loop,))
+        self._thread.setDaemon(True)
         self._thread.start()
 
     def send_connect(self, address: str, run_server_when_connection_refused: bool = True) -> None:
