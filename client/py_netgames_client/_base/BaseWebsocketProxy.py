@@ -27,9 +27,13 @@ class BaseWebsocketProxy(ABC):
 
     def __init__(self, game_id: UUID = None) -> None:
         super().__init__()
+        self._logger = logging.getLogger("py_netgames_client")
         self._loop = asyncio.new_event_loop()
         self.__deserializer = WebhookPayloadDeserializer()
         self._game_id = game_id if game_id else IdentifierFileGenerator().get_or_create_identifier()
+        self._logger.info(
+            f"Game identified by game_id: {self._game_id}."
+            f" Different instances of the same game must use the same game_id id in order to have matches.")
         self._websocket = None
 
         def start_background_loop(loop: asyncio.AbstractEventLoop) -> None:
@@ -38,7 +42,6 @@ class BaseWebsocketProxy(ABC):
 
         self._thread = threading.Thread(target=start_background_loop, args=(self._loop,))
         self._thread.start()
-        self._logger = logging.getLogger("py_netgames_client")
 
     def send_connect(self, address: str, run_server_when_connection_refused: bool = True) -> None:
 
