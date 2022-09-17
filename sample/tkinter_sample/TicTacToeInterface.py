@@ -98,8 +98,11 @@ class TicTacToeInterface(PyNetgamesServerListener):
 
     def receive_error(self, error):
         self._menu_bar.connection_error(error)
+        self._ongoing_match = False
+        self._update_screen()
 
     def receive_disconnect(self):
+        self._menu_bar.disconnect()
         self._ongoing_match = False
         self._update_screen()
 

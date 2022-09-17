@@ -54,7 +54,7 @@ class BaseWebsocketProxy(ABC):
                                            "send_connect", "bool"), stacklevel=2)
 
         if self._open():
-            return warnings.warn(f"Call to send_connect when connection is already active.", stacklevel=2)
+            return self._logger.debug(f"Call to send_connect when connection is already active.", stacklevel=2)
 
         async def async_connect():
 
@@ -123,7 +123,7 @@ class BaseWebsocketProxy(ABC):
     def send_disconnect(self) -> None:
 
         if self._closed():
-            return warnings.warn(f"Call to send_disconnect when there is no active connection", stacklevel=2)
+            return self._logger.debug(f"Call to send_disconnect when there is no active connection", stacklevel=2)
 
         async def async_disconnect():
             try:
