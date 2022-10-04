@@ -14,7 +14,8 @@ class IdentifierFileGenerator:
 
     def get_or_create_identifier(self) -> UUID:
         path = Path("gameid.txt")
-        if game_id := self._get_id(path):
+        game_id = self._get_id(path)
+        if game_id:
             self._logger.info(f"Found game_id at {path.absolute()} with value {game_id}")
             return game_id
         else:
