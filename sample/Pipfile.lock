@@ -1,11 +1,11 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "7aa50cf15da958c112cb8d45df1181b11be71e74f76e6b44a67496edfeef6277"
+            "sha256": "e2901f42bca937e4136334ca719cd213b567e2722d6f8c2d4883ccb878e07b96"
         },
         "pipfile-spec": 6,
         "requires": {
-            "python_version": "3.8"
+            "python_version": "3"
         },
         "sources": [
             {
@@ -56,11 +56,11 @@
         },
         "py-netgames-client": {
             "hashes": [
-                "sha256:b0e9f1e5597480fd0a2f8ceed210fa2a0c7d20aa85cd6119a93b7cffc5974cd2",
-                "sha256:be284496ea8c370dcdc0bdb57a9c54c5a15c6b978fb8e959d24fd9d24b06ac0a"
+                "sha256:7487fe4c281a81fbd53e64e6d842e383e1cdc9655df1a3d5c1df01270a4de8cd",
+                "sha256:ee4572059045b0a0adcb462ecab2de6f32ced66b695fa43002ab73af45a77587"
             ],
             "index": "pypi",
-            "version": "==0.0.1"
+            "version": "==0.0.2"
         },
         "py-netgames-model": {
             "hashes": [
