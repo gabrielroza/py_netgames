@@ -9,7 +9,6 @@ from py_netgames_model.messaging.message import MatchStartedMessage, MoveMessage
 
 from tictactoe.TicTacToeBoard import TicTacToeBoard, TicTacToeCoordinate
 from tictactoe.TicTacToeMark import TicTacToeMark
-from tkinter_sample import WINDOW_WIDTH, WINDOW_HEIGHT
 from tkinter_sample.ServerConnectionMenubar import ServerConnectionMenubar
 
 
@@ -29,7 +28,6 @@ class TicTacToeInterface(PyNetgamesServerListener):
         def _setup_tk() -> Tk:
             tk = Tk()
             tk.title("Tic Tac Toe")
-            tk.minsize(WINDOW_WIDTH, WINDOW_HEIGHT)
             return tk
 
         self._tk = _setup_tk()
