@@ -20,7 +20,7 @@ class MainInterface:
 
     def __init__(self) -> None:
         pygame.init()
-        self._surface = pygame.display.set_mode([WINDOW_WIDTH, WINDOW_HEIGHT], pygame.RESIZABLE)
+        self._surface = pygame.display.set_mode([WINDOW_WIDTH, WINDOW_HEIGHT])
         self._main_menu = self._build_main_menu()
         self._is_running = True
         self._server_proxy = PyNetgamesServerProxy()
@@ -63,7 +63,8 @@ class MainInterface:
             pygame.display.update()
 
     def _build_main_menu(self):
-        main_menu = pygame_menu.Menu('TicTacToe', WINDOW_WIDTH, WINDOW_HEIGHT, theme=pygame_menu.themes.THEME_BLUE)
+        width, height = pygame.display.get_surface().get_size()
+        main_menu = pygame_menu.Menu('TicTacToe', width, height, theme=pygame_menu.themes.THEME_BLUE)
         main_menu.select_widget(main_menu.add.generic_widget(self._build_connect_switch(), configure_defaults=True))
         main_menu.add.generic_widget(self._build_match_request_switch(), configure_defaults=True)
         main_menu.add.button('Quit', pygame_menu.events.EXIT)
