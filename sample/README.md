@@ -11,7 +11,7 @@ Para executar um exemplo de uso é necessário ter [instalado o pipenv](https://
 ![screenshot](./img/pipfile%20installation.gif)
 1. A partir da pasta sample/, execute `python -m pipenv shell` para iniciar um terminal no contexto do interpretador Python criado no passo anterior. Então, execute `python -m tkinter_sample` para rodar o exemplo
 ![screenshot](./img/run%20sample.gif)
-1. Repita o processo em outro terminal para executar duas instâncias do jogo, que então poderão conectar-se uma a outra
+1. Repita o passo anterior em outro terminal para executar duas instâncias do jogo, que então poderão conectar-se uma a outra
 ![screenshot](./img/match.gif)
 
 
