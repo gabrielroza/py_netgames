@@ -14,6 +14,14 @@ Para executar um exemplo de uso é necessário ter [instalado o pipenv](https://
 1. Repita o passo anterior em outro terminal para executar duas instâncias do jogo, que então poderão conectar-se uma a outra:  
 ![screenshot](./img/match.gif)
 
+## Modelagem 
+
+![screenshot](./img/py_netgames_sample%20tkinter_sample.jpg)
+
+Com a biblioteca py-netgames-client, a comunicação entre diferentes instâncias de um jogo é realizada através de duas classes:
+1. `PyNetgamesServerProxy`: Utilizada para iniciar e finalizar conexões, solicitar partidas e enviar jogadas.
+2. `PyNetgamesServerListener`: Classe abstrata que deve ser implementada e adicionada a um `PyNetgamesServerProxy` através do método `add_listener`. Em suma, é responsável pelo recebimento de partidas, jogadas e confirmações de ações assíncronas.
+    - Um exemplo de ação assíncrona a ser confirmada é a conexão. Uma conexão é solicitada através do método `PyNetgamesServerProxy.send_connect`. Quando constatada, são notificadas as instâncias de `PyNetgamesServerListener` através do método `receive_connection_success`.
 
 ## Uso com IDEs
 
