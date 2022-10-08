@@ -1,4 +1,4 @@
-# Py-NetGames
+# py-netgames
 
 Desenvolvido como parte de um TCC, Py-NetGames é uma biblioteca criada para auxiliar no desenvolvimento de pequenos jogos multijogador, no contexto de disciplinas introdutórias a programação.
 
