@@ -7,8 +7,8 @@ from py_netgames_client.tkinter_client.PyNetgamesServerListener import PyNetgame
 from py_netgames_client.tkinter_client.PyNetgamesServerProxy import PyNetgamesServerProxy
 from py_netgames_model.messaging.message import MatchStartedMessage, MoveMessage
 
-from tictactoe.TicTacToeBoard import TicTacToeBoard, TicTacToeCoordinate
-from tictactoe.TicTacToeMark import TicTacToeMark
+from tkinter_sample.game_logic.TicTacToeBoard import TicTacToeBoard, TicTacToeCoordinate
+from tkinter_sample.game_logic.TicTacToeMark import TicTacToeMark
 from tkinter_sample.ServerConnectionMenubar import ServerConnectionMenubar
 
 

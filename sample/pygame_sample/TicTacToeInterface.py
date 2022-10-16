@@ -11,8 +11,8 @@ from pygame.image import load
 from pygame.transform import scale
 
 from pygame_sample import WINDOW_WIDTH, WINDOW_HEIGHT
-from tictactoe.TicTacToeBoard import TicTacToeBoard, TicTacToeCoordinate
-from tictactoe.TicTacToeMark import TicTacToeMark
+from pygame_sample.game_logic.TicTacToeBoard import TicTacToeBoard, TicTacToeCoordinate
+from pygame_sample.game_logic.TicTacToeMark import TicTacToeMark
 
 
 class TicTacToeInterface:
@@ -90,8 +90,8 @@ class TicTacToeInterface:
             return scale(load(str(Path(__file__).parent / relative_path)), (WINDOW_WIDTH / 4, WINDOW_HEIGHT / 4))
 
         image_by_mark = {
-            TicTacToeMark.CROSS: load_image("../assets/X.png"),
-            TicTacToeMark.CIRCLE: load_image("../assets/O.png"),
+            TicTacToeMark.CROSS: load_image("assets/X.png"),
+            TicTacToeMark.CIRCLE: load_image("assets/O.png"),
         }
 
         row_positions = {

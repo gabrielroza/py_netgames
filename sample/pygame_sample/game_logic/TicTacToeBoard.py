@@ -2,9 +2,9 @@ import itertools
 from dataclasses import dataclass
 from typing import Optional, Tuple, List, Literal, Dict
 
-from tictactoe.StalemateException import StalemateException
-from tictactoe.TicTacToeMark import TicTacToeMark
-from tictactoe.TicTacToeState import TicTacToeState
+from pygame_sample.game_logic.StalemateException import StalemateException
+from pygame_sample.game_logic.TicTacToeMark import TicTacToeMark
+from pygame_sample.game_logic.TicTacToeState import TicTacToeState
 
 TicTacToeCoordinate = Tuple[Literal[0, 1, 2], Literal[0, 1, 2]]
 
