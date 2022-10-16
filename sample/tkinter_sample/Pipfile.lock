@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "e2901f42bca937e4136334ca719cd213b567e2722d6f8c2d4883ccb878e07b96"
+            "sha256": "aaf014e31f493dce3d456fa38144d1ca36b9709574d3c328eddfda51f16da01e"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -137,16 +137,8 @@
                 "sha256:fcc9586e17875c0cdf8764597955f9daa979098fd4f80be07ed68276ac225480",
                 "sha256:ff961c3280d6ee5f4163f4772f963d7a4dbe42e36c6dd54b79ad436c1f046e5d"
             ],
-            "index": "pypi",
+            "markers": "python_version >= '3.6'",
             "version": "==2.1.2"
-        },
-        "pygame-menu": {
-            "hashes": [
-                "sha256:5e29c72673fc8a9ba63f54e9e9b9eb6fdf32eb23f5ac0823fe0f030c74eb52c3",
-                "sha256:f60feb75865b196a052298db110b085a9c1335e9f81e803491e4d031128f7aaf"
-            ],
-            "index": "pypi",
-            "version": "==4.2.8"
         },
         "pyparsing": {
             "hashes": [
@@ -156,19 +148,13 @@
             "markers": "python_full_version >= '3.6.8'",
             "version": "==3.0.9"
         },
-        "pyperclip": {
-            "hashes": [
-                "sha256:105254a8b04934f0bc84e9c24eb360a591aaf6535c9def5f29d92af107a9bf57"
-            ],
-            "version": "==1.8.2"
-        },
         "typing-extensions": {
             "hashes": [
-                "sha256:25642c956049920a5aa49edcdd6ab1e06d7e5d467fc00e0506c44ac86fbfca02",
-                "sha256:e6d2677a32f47fc7eb2795db1dd15c1f34eff616bcaf2cfb5e997f854fa1c4a6"
+                "sha256:1511434bb92bf8dd198c12b1cc812e800d4181cfcb867674e0f8279cc93087aa",
+                "sha256:16fa4864408f655d35ec496218b85f79b3437c829e93320c7c9215ccfd92489e"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==4.3.0"
+            "version": "==4.4.0"
         },
         "typing-inspect": {
             "hashes": [
