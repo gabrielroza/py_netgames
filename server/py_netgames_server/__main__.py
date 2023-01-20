@@ -18,6 +18,11 @@ def setup_arg_parser() -> argparse.ArgumentParser:
         default=logging.ERROR
     )
     parser.add_argument(
+        '--host',
+        help="Server host",
+        dest="host", default="0.0.0.0"
+    )
+    parser.add_argument(
         '-p', '--port',
         help="Server port",
         dest="port", default=8765
@@ -28,4 +33,4 @@ def setup_arg_parser() -> argparse.ArgumentParser:
 if __name__ == '__main__':
     args = setup_arg_parser().parse_args()
     setup_logger(args.log_level)
-    WebSocketServerBuilder().serve(args.port)
+    WebSocketServerBuilder().serve(args.host, args.port)

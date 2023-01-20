@@ -17,11 +17,11 @@ class WebSocketServerBuilder:
         self._deserializer = WebhookPayloadDeserializer()
         self._server = GameServer()
 
-    async def async_serve(self, port=8765) -> WebSocketServer:
-        return await websockets.serve(self.listen, "localhost", port)
+    async def async_serve(self, host="0.0.0.0", port=8765) -> WebSocketServer:
+        return await websockets.serve(self.listen, host, port)
 
-    def serve(self, port):
-        asyncio.get_event_loop().run_until_complete(websockets.serve(self.listen, "localhost", port))
+    def serve(self, host, port):
+        asyncio.get_event_loop().run_until_complete(websockets.serve(self.listen, host, port))
         asyncio.get_event_loop().run_forever()
 
     async def listen(self, websocket: WebSocketServerProtocol):
