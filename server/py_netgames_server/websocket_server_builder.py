@@ -1,4 +1,5 @@
 import asyncio
+import signal
 
 import websockets
 from py_netgames_model.messaging.deserializer import WebhookPayloadDeserializer
@@ -20,9 +21,12 @@ class WebSocketServerBuilder:
     async def async_serve(self, host="0.0.0.0", port=8765) -> WebSocketServer:
         return await websockets.serve(self.listen, host, port)
 
-    def serve(self, host, port):
-        asyncio.get_event_loop().run_until_complete(websockets.serve(self.listen, host, port))
-        asyncio.get_event_loop().run_forever()
+    def serve(self, host, port, health_check):
+        stop = asyncio.get_event_loop().create_future()
+        asyncio.get_event_loop().add_signal_handler(signal.SIGTERM, stop.set_result, None)
+        asyncio.get_event_loop().run_until_complete(
+            websockets.serve(self.listen, host, port, process_request=health_check))
+        asyncio.get_event_loop().run_until_complete(stop)
 
     async def listen(self, websocket: WebSocketServerProtocol):
         try:

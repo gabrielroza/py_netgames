@@ -1,5 +1,7 @@
 import argparse
+import http
 import logging
+import os
 
 from py_netgames_server.websocket_server_builder import WebSocketServerBuilder
 
@@ -30,7 +32,11 @@ def setup_arg_parser() -> argparse.ArgumentParser:
     return parser
 
 
+async def health_check(path, request_headers):
+    if path == "/health":
+        return http.HTTPStatus.OK, [], b"OK\n"
+
 if __name__ == '__main__':
     args = setup_arg_parser().parse_args()
     setup_logger(args.log_level)
-    WebSocketServerBuilder().serve(args.host, args.port)
+    WebSocketServerBuilder().serve(args.host, args.port, health_check)
