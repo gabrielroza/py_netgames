@@ -44,7 +44,7 @@ class BaseWebsocketProxy(ABC):
         self._thread.setDaemon(True)
         self._thread.start()
 
-    def send_connect(self, address: str = "localhost:8765", run_server_when_connection_refused: bool = True) -> None:
+    def send_connect(self, address: str = "ws://localhost:8765", run_server_when_connection_refused: bool = True) -> None:
 
         if not isinstance(address, str):
             return warnings.warn(self._invalid_type_message(address, "address", "send_connect", "str"), stacklevel=2)
@@ -60,7 +60,7 @@ class BaseWebsocketProxy(ABC):
         async def async_connect():
 
             async def attempt_connection(url):
-                self._websocket = await client.connect("ws://" + url)
+                self._websocket = await client.connect(url)
                 self._listen()
                 self._connection_success()
 

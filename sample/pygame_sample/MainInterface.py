@@ -100,7 +100,7 @@ class MainInterface:
 
     def _connect(self, state: str):
         if state == 'Connecting':
-            self._server_proxy.send_connect()
+            self._server_proxy.send_connect(address="wss://py-netgames-server.fly.dev")
             self._main_menu.get_widget('connect').readonly = True
         elif state == 'Disconnecting':
             self._server_proxy.send_disconnect()

@@ -2,4 +2,4 @@
 
 ## Modelagem
 
-![screenshot](./img/py_netgames_client.jpg)
+![screenshot](.img/py_netgames_client.jpg)
