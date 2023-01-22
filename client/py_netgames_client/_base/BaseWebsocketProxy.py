@@ -59,8 +59,18 @@ class BaseWebsocketProxy(ABC):
 
         async def async_connect():
 
-            async def attempt_connection(url):
-                self._websocket = await client.connect(url)
+            async def attempt_connection(url, attempt=0):
+                try:
+                    self._websocket = await client.connect(url)
+                except Exception as e:
+                    if isinstance(e, ConnectionResetError) and attempt < 6:
+                        self._logger.debug(
+                            f"ConnectionResetError when attempting connection: {e}, retrying in {attempt} seconds...")
+                        await asyncio.sleep(attempt)
+                        return await attempt_connection(url, attempt + 1)
+                    else:
+                        raise e
+
                 self._listen()
                 self._connection_success()
 
