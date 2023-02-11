@@ -2,8 +2,10 @@
 
 A forma primária de utilizar py_netgames se dá através de um artefato Python reutilizável chamado py-netgames-client. Disponibilizado via pip, existem diversas formas de obtê-lo, porém é recomendado que seja feito através de um ambiente Python virtual.
 
-* Um esqueleto de projeto configurado para baixar o py-netgames-client via ambiente virtual Python pode ser encontrado em [py_netgames_template](https://github.com/gabrielroza/py_netgames_template)
-* Um exemplo de jogo implementado com py-netgames-client pode ser encontrado neste [link](https://github.com/gabrielroza/py_netgames/tree/main/sample)
+* Um esqueleto de projeto configurado para baixar o py-netgames-client via ambiente virtual Python, com instruções de uso, pode ser encontrado em [py_netgames_template](https://github.com/gabrielroza/py_netgames_template)
+* Exemplos de jogos implementado com py-netgames-client, com instruções de execução, podem ser encontrados neste [link](https://github.com/gabrielroza/py_netgames/tree/main/sample)
+    
+    * Atenção para a biblioteca gráfica utilizada, é disponibilizado o código fonte de implementações com [tkinter](https://github.com/gabrielroza/py_netgames/tree/main/sample/tkinter_sample) e [pygame](https://github.com/gabrielroza/py_netgames/tree/main/sample/pygame_sample)
 
 
 ## Casos de uso
