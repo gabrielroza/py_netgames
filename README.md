@@ -4,9 +4,10 @@ Desenvolvido como parte de um TCC, py-netgames é uma biblioteca criada para aux
 
 Este repositório é estruturado da seguinte forma:
 
+- [Tutorial de uso](./tutorial.md)
 - [Template de projeto](https://github.com/gabrielroza/py_netgames_template)
 - [Exemplos de uso](./sample/)
-- [Cliente](./client)
-- [Servidor](./server)
-- [Modelo (Utilizado por Cliente e Servidor)](./model)
+- [Código fonte do componente Cliente](./client)
+- [Código fonte do componente Servidor](./server)
+- [Código fonte do componente Modelo (utilizado por Cliente e Servidor)](./model)
 - [Modelagem UML](./modeling/)

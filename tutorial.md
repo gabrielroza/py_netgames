@@ -1,10 +1,21 @@
 # Tutorial
 
-A forma primária de utilizar o py_netgames se dá através de um artefato Python reutilizável, o py-netgames-client. Disponibilizado via pip, a sua estrutura básica de classes é a seguinte:
+A forma primária de utilizar py_netgames se dá através de um artefato Python reutilizável chamado py-netgames-client. Disponibilizado via pip, existem diversas formas de obtê-lo, porém é recomendado que seja feito através de um ambiente Python virtual.
+
+* Um esqueleto de projeto configurado para baixar o py-netgames-client via ambiente virtual Python pode ser encontrado em [py_netgames_template](https://github.com/gabrielroza/py_netgames_template)
+* Um exemplo de jogo implementado com py-netgames-client pode ser encontrado neste [link](https://github.com/gabrielroza/py_netgames/tree/main/sample)
+
+
+## Casos de uso
+
+
+## Estrutura de classes
+
+A estrutura básica de classes de py-netgames-client é a seguinte:
 
 ![screenshot](./client/.img/py_netgames_client_public_classes.jpg)
 
-Com a biblioteca py-netgames-client, a comunicação entre diferentes instâncias de um jogo é realizada através de duas classes:
+Com py-netgames-client, a comunicação entre diferentes instâncias de um jogo é realizada através de duas classes:
 1. `PyNetgamesServerProxy`: Utilizada para iniciar e finalizar conexões, solicitar partidas e enviar jogadas. Métodos:
     -  `add_listener(listener: PyNetgamesServerListener)`: Adiciona uma implementação de `PyNetgamesServerListener` aos listeners da instância de `PyNetgamesServerProxy`. Listeners são notificados do recebimento de partidas e jogadas, além de confirmações dos métodos seguintes.
     -  `send_connect()`: Solicita uma conexão. A conexão é confirmada através do método `receive_connection_success` dos listeners registrados.
