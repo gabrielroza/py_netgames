@@ -5,7 +5,7 @@ A forma primária de utilizar py_netgames se dá através de um artefato Python 
 * Um esqueleto de projeto configurado para baixar o py-netgames-client via ambiente virtual Python, com instruções de uso, pode ser encontrado em [py_netgames_template](https://github.com/gabrielroza/py_netgames_template)
 * Exemplos de jogos implementado com py-netgames-client, com instruções de execução, podem ser encontrados neste [link](https://github.com/gabrielroza/py_netgames/tree/main/sample)
     
-    * Atenção para a biblioteca gráfica utilizada, é disponibilizado o código fonte de implementações com [tkinter](https://github.com/gabrielroza/py_netgames/tree/main/sample/tkinter_sample) e [pygame](https://github.com/gabrielroza/py_netgames/tree/main/sample/pygame_sample)
+    * Atenção para a biblioteca gráfica utilizada, são disponibilizados os códigos fonte de implementações com [tkinter](https://github.com/gabrielroza/py_netgames/tree/main/sample/tkinter_sample) e [pygame](https://github.com/gabrielroza/py_netgames/tree/main/sample/pygame_sample)
 
 
 ## Casos de uso
@@ -15,7 +15,7 @@ A forma primária de utilizar py_netgames se dá através de um artefato Python 
 
 A estrutura básica de classes de py-netgames-client é a seguinte:
 
-![screenshot](./client/.img/py_netgames_client_public_classes.jpg)
+![screenshot](/client/.img/py_netgames_client_public_classes.jpg)
 
 Com py-netgames-client, a comunicação entre diferentes instâncias de um jogo é realizada através de duas classes:
 1. `PyNetgamesServerProxy`: Utilizada para iniciar e finalizar conexões, solicitar partidas e enviar jogadas. Métodos:
