@@ -15,7 +15,7 @@ A forma primária de utilizar py_netgames se dá através de um artefato Python 
 
 A estrutura básica de classes de py-netgames-client é a seguinte:
 
-![screenshot](./client/.img/py_netgames_client_public_classes.jpg)
+![screenshot](./imgs/py_netgames_client_public_classes.jpg)
 
 Com py-netgames-client, a comunicação entre diferentes instâncias de um jogo é realizada através de duas classes:
 1. `PyNetgamesServerProxy`: Utilizada para iniciar e finalizar conexões, solicitar partidas e enviar jogadas. Métodos:
