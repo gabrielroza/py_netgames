@@ -3,4 +3,4 @@
 ## Modelagem
 
 
-![screenshot](./img/py_netgames_model.jpg)
+![screenshot](../imgs/py_netgames_model.jpg)

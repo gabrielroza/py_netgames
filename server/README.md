@@ -8,4 +8,4 @@
 
 ## Modelagem 
 
-![screenshot](.img/server.jpg)
+![screenshot](../imgs/server.jpg)
