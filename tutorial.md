@@ -3,13 +3,10 @@
 A forma primária de utilizar py_netgames se dá através de um artefato Python reutilizável chamado py-netgames-client. Disponibilizado via pip, existem diversas formas de obtê-lo, porém é recomendado que seja feito através de um ambiente Python virtual.
 
 * Um esqueleto de projeto configurado para baixar o py-netgames-client via ambiente virtual Python, com instruções de uso, pode ser encontrado em [py_netgames_template](https://github.com/gabrielroza/py_netgames_template)
-* Exemplos de jogos implementado com py-netgames-client, com instruções de execução, podem ser encontrados neste [link](https://github.com/gabrielroza/py_netgames/tree/main/sample)
+
+* Exemplos de jogos implementados com py-netgames-client, com instruções de execução, podem ser encontrados neste [link](https://github.com/gabrielroza/py_netgames/tree/main/sample)
     
     * Atenção para a biblioteca gráfica utilizada, são disponibilizados os códigos fonte de implementações com [tkinter](https://github.com/gabrielroza/py_netgames/tree/main/sample/tkinter_sample) e [pygame](https://github.com/gabrielroza/py_netgames/tree/main/sample/pygame_sample)
-
-
-## Casos de uso
-
 
 ## Estrutura de classes
 
@@ -36,3 +33,7 @@ Com py-netgames-client, a comunicação entre diferentes instâncias de um jogo 
     - `receive_disconnect`: Método chamado quando ocorre uma desconexão. O tratamento recomendado é resetar o jogo para seu estado inicial.
     - `receive_match_requested_success`: Método de sobrescrita opcional, chamado quando uma solicitação de partida realizada via `send_match` é confirmada.
     - `receive_move_sent_success`: Método de sobrescrita opcional, chamado quando um envio de jogada realizada via `send_move` é confirmado.
+
+## Casos de uso
+
+![screenshot](/imgs/py_netgames_use_cases.jpg)
