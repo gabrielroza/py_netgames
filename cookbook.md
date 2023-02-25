@@ -21,10 +21,10 @@ Visando a simplificação da criação de jogos distribuídos, py-netgames-clien
     -  `send_connect()`: Solicita uma conexão. A conexão é confirmada através do método `receive_connection_success` dos listeners registrados.
         * **Atenção**: Caso o método `send_connect()` seja chamado sem nenhum argumento, será possível conectar apenas com outras instâncias locais do jogo. Para conectar com outras máquinas, utilize um servidor remoto, como por exemplo: `send_connect(address="wss://py-netgames-server.fly.dev")`  	      
     -  `send_match(amount_of_players: int)`: Solicita uma partida para a quantidade de jogadores informados. A solicitação é confirmada através do método `receive_match` dos listeners registrados.
-        * **Atenção**: Um jogo é identificado por um [UUID](https://en.wikipedia.org/wiki/Universally_unique_identifier) gerado pelo py-netgames durante a instanciação de `PyNetgamesServerProxy`, em um arquivo chamado gameid.txt. **Diferentes instâncias de um mesmo jogo devem usar o mesmo id para se conectarem**. Caso diferentes instâncias estejam conectadas e solicitando partida, porém a mesma não é iniciada, certifique-se através dos logs que ambas as instâncias estão com o mesmo id. Exemplo de logs:
+        * **Atenção**: Um jogo é identificado por um [UUID][UUID] gerado pelo py-netgames durante a instanciação de `PyNetgamesServerProxy`, em um arquivo chamado gameid.txt. **Diferentes instâncias de um mesmo jogo devem usar o mesmo id para se conectarem**. Caso diferentes instâncias estejam conectadas e solicitando partida, porém a mesma não é iniciada, certifique-se através dos logs que ambas as instâncias estão com o mesmo id. Exemplo de logs:
                 `INFO:py_netgames_client:Found game_id at /tkinter_sample/gameid.txt with value 9e6daf0b-69a1-4524-9ac0-6fd140865425`  
                 `INFO:py_netgames_client:Game identified by game_id: 9e6daf0b-69a1-4524-9ac0-6fd140865425. Different instances of the same game must use the same game_id id in order to have matches.`
-    -  `send_move(match_id: UUID, payload: Dict[str, any])`: Envia uma jogada.`match_id` deve ser o identificador da partida recebida pelo listener através do método `receive_match`. `payload` é um dicionário que contém os dados do jogo em questão. Neste exemplo, `payload` contém as informações do tabuleiro de jogo da velha. É importante notar que este dicionário deve conter chaves do tipo `str` e valores de tipos cuja qual serialização é possível: `dict`, `list`, `tuple`, `str`, `int`, `float`, `bool` e `None`.
+    -  `send_move(match_id: UUID, payload: Dict[str, any])`: Envia uma jogada.`match_id` deve ser o identificador da partida recebida pelo listener através do método `receive_match`. `payload` é um dicionário que contém os dados do jogo em questão. Neste exemplo, `payload` contém as informações do tabuleiro de jogo da velha. É importante notar que este dicionário deve conter chaves do tipo `str` e valores de [tipos cuja qual serialização é possível](https://docs.python.org/3/library/json.html#json.JSONDecoder) : `dict`, `list`, `tuple`, `str`, `int`, `float`, `bool` e `None`.
     -  `send_disconnect()`: Solicita desconexão.
 2. `PyNetgamesServerListener`: Classe abstrata que deve ser implementada e adicionada a um `PyNetgamesServerProxy` através do método `add_listener`. Em suma, é responsável pelo recebimento de partidas, jogadas e confirmações de ações. Métodos:
     - `receive_connection_success()`: Método chamado quando uma conexão solicitada através do método `send_connect` é confirmada.
@@ -43,14 +43,62 @@ Visando a simplificação da criação de jogos distribuídos, py-netgames-clien
 
 Iniciativa: Local
 
-Este caso de uso trata do registro de uma subclasse de `PyNetgamesServerListener` no componente remoto do framework, uma instância de `PyNetgamesServerProxy`. É comum que esta subclasse de `PyNetgamesServerListener` seja também a classe que implementa a interface gráfica do jogo, dessa forma
+Trata do registro de uma subclasse de `PyNetgamesServerListener` no componente remoto do framework, uma instância de `PyNetgamesServerProxy`. É comum que esta subclasse de `PyNetgamesServerListener` seja também a classe que implementa a interface gráfica do jogo, dessa forma permitindo a atualização visual quando por exemplo uma jogada remota é recebida.
 
 ### Send Connect
+
+Iniciativa: Local
+
+Trata da conexão com o componente remoto (o servidor) do framework. Diferentes execuções de um mesmo jogo precisam estar conectadas no mesmo servidor para que seja possível a disputa de partidas. Dessa forma, é preciso atentar-se ao endereço de servidor que será informado a `PyNetgamesServerProxy`. Caso nenhum endereço seja informado, será possível a comunicação somente na mesma máquina. 
+
 ### Send Match
+
+Iniciativa: Local
+
+Trata da solicitação de uma partida para a quantidade de jogadores informada. Importante notar que cada jogo possui um identificador gerado pelo framework, em um arquivo gameid.txt. Diferentes execuções do mesmo jogo precisam ter o mesmo gameid.txt para que ocorra a conexão de partidas. Caso a execução daUma vez que o componente remoto do framework identifica que existem jogadores suficientes dada a quantidade solicitada, uma partida será iniciada (caso de uso Receive Match).
+
 ### Send Move
+
+Iniciativa: Local
+
+Trata do envio de um movimento para o componente remoto do framework. Importante destacar que o framework não realiza controle de "vez" dos jogadores, ficando isso a cargo da implementação do jogo com base na posição recebida no caso de uso Receive Match. Ao enviar o movimento, é necessário informar o id da partida, recebido no caso de uso Receive Match. O movimento enviado deve ser um dicionário composto por tipos serializáveis.
+
 ### Send Disconnect
+
+Iniciativa: Local
+
+Trata da solicitação de desconexão com o componente remoto do framework. Caso não haja conexão em vigor, nada ocorre. Caso partida em andamento, os demais jogadores também serão desconectados.
+
 ### Receive Connection
+
+Iniciativa: Framework
+
+Trata da confirmação de sucesso de uma conexão solicitada no caso de uso Send Connect. 
+
 ### Receive Match
+
+Iniciativa: Framework
+
+Trata do recebimento de uma partida, conforme solicitada no caso de uso Request Match. A mensagem recebida possui o identificador da partida (que deve ser utilizado para enviar movimentos no caso de uso Send Move) e a posição do jogador, que pode ser usada para controlar a vez do jogador.
+
 ### Receive Move
+
+Iniciativa: Framework
+
+Trata do recebimento de uma jogada, A mensagem recebida possui o identificador da partida (que deve ser utilizado para enviar movimentos no caso de uso Send Move) e a posição do jogador, que pode ser usada para controlar a vez do jogador.
+
+
 ### Receive Error
+
+Iniciativa: Framework
+
+Trata do recebimento de eventuais erros que ocorram no framework. O tratamento recomendado é resetar o jogo para um estado inicial.
+
+
 ### Receive Disconnect
+
+Iniciativa: Framework
+
+Trata do recebimento de uma desconexão, seja ela solicitada (caso de uso Send Disconnect) ou recebida por desconexão de outros jogadores. O tratamento recomendado é resetar o jogo para um estado inicial.
+
+[UUID]: https://en.wikipedia.org/wiki/Universally_unique_identifier
