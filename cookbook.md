@@ -1,4 +1,4 @@
-# Cookbook
+# Framework Cookbook
 
 Um cookbook de framework é um conjunto de instruções, guias e exemplos que fornecem aos desenvolvedores um roteiro passo a passo para usar um framework específico, neste caso o py-netgames.
 
