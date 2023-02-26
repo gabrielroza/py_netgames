@@ -68,26 +68,33 @@ Trata da confirmação de sucesso de uma conexão solicitada no caso de uso Send
 
 Iniciativa: Local
 
-Trata da solicitação de uma partida para a quantidade de jogadores informada. Importante notar que cada jogo possui um identificador gerado pelo framework, em um arquivo gameid.txt. Diferentes execuções do mesmo jogo precisam ter o mesmo gameid.txt para que ocorra a conexão de partidas. Caso a execução daUma vez que o componente remoto do framework identifica que existem jogadores suficientes dada a quantidade solicitada, uma partida será iniciada (caso de uso Receive Match).
+Trata da solicitação de uma partida para a quantidade de jogadores informada. Importante notar que cada jogo possui um identificador gerado pelo framework, em um arquivo gameid.txt. Diferentes execuções do mesmo jogo precisam ter o mesmo gameid.txt para que ocorra a conexão de partidas. Uma vez que o componente remoto do framework identifica que existem jogadores suficientes dada a quantidade solicitada, uma partida será iniciada (caso de uso Receive Match).
 
+![screenshot](/imgs/send_match_activity_diagram.jpg)
 
 ### Receive Match
 
 Iniciativa: Framework
 
-Trata do recebimento de uma partida, conforme solicitada no caso de uso Request Match. A mensagem recebida possui o identificador da partida (que deve ser utilizado para enviar movimentos no caso de uso Send Move) e a posição do jogador, que pode ser usada para controlar a vez do jogador.
+Trata do recebimento de uma partida, conforme solicitada no caso de uso Request Match. A mensagem recebida possui o identificador da partida (que deve ser utilizado para enviar movimentos no caso de uso Send Move) e a posição do jogador, que pode ser usada para controlar a vez.
+
+![screenshot](/imgs/receive_match_activity_diagram.jpg)
 
 ### Send Move
 
 Iniciativa: Local
 
-Trata do envio de um movimento para o componente remoto do framework. Importante destacar que o framework não realiza controle de "vez" dos jogadores, ficando isso a cargo da implementação do jogo com base na posição recebida no caso de uso Receive Match. Ao enviar o movimento, é necessário informar o id da partida, recebido no caso de uso Receive Match. O movimento enviado deve ser um dicionário composto por tipos serializáveis.
+Trata do envio de um movimento para o componente remoto do framework. Importante destacar que o framework não realiza controle de "vez" dos jogadores, ficando isso a cargo da implementação do jogo com base na posição recebida no caso de uso Receive Match. Ao enviar o movimento, é necessário informar o id da partida, recebido no caso de uso Receive Match. O movimento enviado deve ser um dicionário composto por [tipos serializáveis](https://docs.python.org/3/library/json.html#json.JSONDecoder).
+
+![screenshot](/imgs/send_move_activity_diagram.jpg)
 
 ### Receive Move
 
 Iniciativa: Framework
 
-Trata do recebimento de uma jogada, A mensagem recebida possui o identificador da partida (que deve ser utilizado para enviar movimentos no caso de uso Send Move) e a posição do jogador, que pode ser usada para controlar a vez do jogador.
+Trata do recebimento de uma jogada, A mensagem recebida possui o identificador da partida e o dicionário enviado pelo outro jogador.
+
+![screenshot](/imgs/receive_move_activity_diagram.jpg)
 
 
 ### Send Disconnect
@@ -96,6 +103,8 @@ Iniciativa: Local
 
 Trata da solicitação de desconexão com o componente remoto do framework. Caso não haja conexão em vigor, nada ocorre. Caso partida em andamento, os demais jogadores também serão desconectados.
 
+![screenshot](/imgs/send_disconnect_activity_diagram.jpg)
+
 
 ### Receive Disconnect
 
@@ -103,6 +112,7 @@ Iniciativa: Framework
 
 Trata do recebimento de uma desconexão, seja ela solicitada (caso de uso Send Disconnect) ou recebida por desconexão de outros jogadores. O tratamento recomendado é resetar o jogo para um estado inicial.
 
+![screenshot](/imgs/receive_disconnect_activity_diagram.jpg)
 
 ### Receive Error
 
@@ -110,6 +120,7 @@ Iniciativa: Framework
 
 Trata do recebimento de eventuais erros que ocorram no framework. O tratamento recomendado é resetar o jogo para um estado inicial.
 
+![screenshot](/imgs/receive_error_activity_diagram.jpg)
 
 
 [UUID]: https://en.wikipedia.org/wiki/Universally_unique_identifier
