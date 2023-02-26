@@ -46,17 +46,23 @@ Iniciativa: Local
 
 Trata do registro de uma subclasse de `PyNetgamesServerListener` no componente remoto do framework, uma instância de `PyNetgamesServerProxy`. É comum que esta subclasse de `PyNetgamesServerListener` seja também a classe que implementa a interface gráfica do jogo, dessa forma permitindo a atualização visual quando por exemplo uma jogada remota é recebida.
 
+![screenshot](/imgs/add_listener_activity_diagram.jpg)
+
 ### Send Connect
 
 Iniciativa: Local
 
 Trata da conexão com o componente remoto (o servidor) do framework. Diferentes execuções de um mesmo jogo precisam estar conectadas no mesmo servidor para que seja possível a disputa de partidas. Dessa forma, é preciso atentar-se ao endereço de servidor que será informado a `PyNetgamesServerProxy`. Caso nenhum endereço seja informado, será possível a comunicação somente na mesma máquina. 
 
+![screenshot](/imgs/send_connect_activity_diagram.jpg)
+
 ### Receive Connection
 
 Iniciativa: Framework
 
 Trata da confirmação de sucesso de uma conexão solicitada no caso de uso Send Connect. 
+
+![screenshot](/imgs/receive_connection_activity_diagram.jpg)
 
 ### Send Match
 
