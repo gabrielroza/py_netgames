@@ -13,7 +13,7 @@ A forma primária de utilizar py-netgames se dá através de um artefato Python 
 
 ![screenshot](/imgs/py_netgames_client_public_classes.jpg)
 
-Visando a simplificação da criação de jogos distribuídos, py-netgames-client expõe duas classes reutilizáveis que abstraem algumas das dificuldades inerentes a criação de softwares de distribuídos. Estas classes são:  
+Visando a simplificação da criação de jogos distribuídos, py-netgames-client expõe duas classes reutilizáveis que abstraem algumas das dificuldades inerentes a criação de softwares de distribuídos: `PyNetgamesServerProxy` e `PyNetgamesServerListener`. `ListenerImplementation` não faz parte do framework e representa apenas a implementação de `PyNetgamesServerListener` que se faz necessária em jogos que utilizem py-netgames-client.
 
 1. `PyNetgamesServerProxy`: Utilizada para iniciar e finalizar conexões, solicitar partidas e enviar jogadas. Representa o componente remoto do framework.  
  Métodos:
@@ -51,29 +51,18 @@ Iniciativa: Local
 
 Trata da conexão com o componente remoto (o servidor) do framework. Diferentes execuções de um mesmo jogo precisam estar conectadas no mesmo servidor para que seja possível a disputa de partidas. Dessa forma, é preciso atentar-se ao endereço de servidor que será informado a `PyNetgamesServerProxy`. Caso nenhum endereço seja informado, será possível a comunicação somente na mesma máquina. 
 
+### Receive Connection
+
+Iniciativa: Framework
+
+Trata da confirmação de sucesso de uma conexão solicitada no caso de uso Send Connect. 
+
 ### Send Match
 
 Iniciativa: Local
 
 Trata da solicitação de uma partida para a quantidade de jogadores informada. Importante notar que cada jogo possui um identificador gerado pelo framework, em um arquivo gameid.txt. Diferentes execuções do mesmo jogo precisam ter o mesmo gameid.txt para que ocorra a conexão de partidas. Caso a execução daUma vez que o componente remoto do framework identifica que existem jogadores suficientes dada a quantidade solicitada, uma partida será iniciada (caso de uso Receive Match).
 
-### Send Move
-
-Iniciativa: Local
-
-Trata do envio de um movimento para o componente remoto do framework. Importante destacar que o framework não realiza controle de "vez" dos jogadores, ficando isso a cargo da implementação do jogo com base na posição recebida no caso de uso Receive Match. Ao enviar o movimento, é necessário informar o id da partida, recebido no caso de uso Receive Match. O movimento enviado deve ser um dicionário composto por tipos serializáveis.
-
-### Send Disconnect
-
-Iniciativa: Local
-
-Trata da solicitação de desconexão com o componente remoto do framework. Caso não haja conexão em vigor, nada ocorre. Caso partida em andamento, os demais jogadores também serão desconectados.
-
-### Receive Connection
-
-Iniciativa: Framework
-
-Trata da confirmação de sucesso de uma conexão solicitada no caso de uso Send Connect. 
 
 ### Receive Match
 
@@ -81,11 +70,31 @@ Iniciativa: Framework
 
 Trata do recebimento de uma partida, conforme solicitada no caso de uso Request Match. A mensagem recebida possui o identificador da partida (que deve ser utilizado para enviar movimentos no caso de uso Send Move) e a posição do jogador, que pode ser usada para controlar a vez do jogador.
 
+### Send Move
+
+Iniciativa: Local
+
+Trata do envio de um movimento para o componente remoto do framework. Importante destacar que o framework não realiza controle de "vez" dos jogadores, ficando isso a cargo da implementação do jogo com base na posição recebida no caso de uso Receive Match. Ao enviar o movimento, é necessário informar o id da partida, recebido no caso de uso Receive Match. O movimento enviado deve ser um dicionário composto por tipos serializáveis.
+
 ### Receive Move
 
 Iniciativa: Framework
 
 Trata do recebimento de uma jogada, A mensagem recebida possui o identificador da partida (que deve ser utilizado para enviar movimentos no caso de uso Send Move) e a posição do jogador, que pode ser usada para controlar a vez do jogador.
+
+
+### Send Disconnect
+
+Iniciativa: Local
+
+Trata da solicitação de desconexão com o componente remoto do framework. Caso não haja conexão em vigor, nada ocorre. Caso partida em andamento, os demais jogadores também serão desconectados.
+
+
+### Receive Disconnect
+
+Iniciativa: Framework
+
+Trata do recebimento de uma desconexão, seja ela solicitada (caso de uso Send Disconnect) ou recebida por desconexão de outros jogadores. O tratamento recomendado é resetar o jogo para um estado inicial.
 
 
 ### Receive Error
@@ -95,10 +104,5 @@ Iniciativa: Framework
 Trata do recebimento de eventuais erros que ocorram no framework. O tratamento recomendado é resetar o jogo para um estado inicial.
 
 
-### Receive Disconnect
-
-Iniciativa: Framework
-
-Trata do recebimento de uma desconexão, seja ela solicitada (caso de uso Send Disconnect) ou recebida por desconexão de outros jogadores. O tratamento recomendado é resetar o jogo para um estado inicial.
 
 [UUID]: https://en.wikipedia.org/wiki/Universally_unique_identifier
