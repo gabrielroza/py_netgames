@@ -13,7 +13,7 @@ A forma primária de utilizar py-netgames se dá através de um artefato Python 
 
 ![screenshot](/imgs/py_netgames_client_public_classes.jpg)
 
-Visando a simplificação da criação de jogos distribuídos, py-netgames-client expõe duas classes reutilizáveis que abstraem algumas das dificuldades inerentes a criação de softwares de distribuídos: `PyNetgamesServerProxy` e `PyNetgamesServerListener`. `ListenerImplementation` não faz parte do framework e representa apenas a implementação de `PyNetgamesServerListener` que se faz necessária em jogos que utilizem py-netgames-client.
+Visando a simplificação da criação de jogos distribuídos, py-netgames-client expõe classes reutilizáveis que abstraem algumas das dificuldades inerentes a criação de softwares de distribuídos. `ListenerImplementation` não faz parte do framework e representa apenas a implementação de `PyNetgamesServerListener` que se faz necessária em jogos que utilizem py-netgames-client.
 
 1. `PyNetgamesServerProxy`: Utilizada para iniciar e finalizar conexões, solicitar partidas e enviar jogadas. Representa o componente remoto do framework.  
  Métodos:
@@ -119,7 +119,7 @@ Trata da solicitação de desconexão com o componente remoto do framework. Caso
 
 Diagrama de Atividades           |  Diagrama de Sequência
 :-------------------------:|:-------------------------:
-![screenshot](/imgs/send_disconnect_activity_diagram.jpg)|
+![screenshot](/imgs/send_disconnect_activity_diagram.jpg)| ![screenshot](/imgs/Send%20Disconnect.jpg)
 
 ### Receive Disconnect
 
@@ -129,7 +129,7 @@ Trata do recebimento de uma desconexão, seja ela solicitada (caso de uso Send D
 
 Diagrama de Atividades           |  Diagrama de Sequência
 :-------------------------:|:-------------------------:
-![screenshot](/imgs/receive_disconnect_activity_diagram.jpg)|
+![screenshot](/imgs/receive_disconnect_activity_diagram.jpg)| ![screenshot](/imgs/Receive%20Disconnect.jpg)
 
 ### Receive Error
 
@@ -139,6 +139,6 @@ Trata do recebimento de eventuais erros que ocorram no framework. O tratamento r
 
 Diagrama de Atividades           |  Diagrama de Sequência
 :-------------------------:|:-------------------------:
-![screenshot](/imgs/receive_error_activity_diagram.jpg)|
+![screenshot](/imgs/receive_error_activity_diagram.jpg)|![screenshot](/imgs/Receive%20Error.jpg)
 
 [UUID]: https://en.wikipedia.org/wiki/Universally_unique_identifier
