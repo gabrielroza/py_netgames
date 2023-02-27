@@ -59,7 +59,7 @@ Trata da conexão com o componente remoto (o servidor) do framework. Diferentes 
 
 Diagrama de Atividades           |  Diagrama de Sequência
 :-------------------------:|:-------------------------:
-![screenshot](/imgs/send_connect_activity_diagram.jpg) | ![screenshot](/imgs/Send%20Connect.jpg) 
+![screenshot](/imgs/send_connect_activity_diagram.jpg) | ![screenshot](imgs/Send%20Connect.jpg) 
 
 ### Receive Connection
 
@@ -69,7 +69,7 @@ Trata da confirmação de sucesso de uma conexão solicitada no caso de uso Send
 
 Diagrama de Atividades           |  Diagrama de Sequência
 :-------------------------:|:-------------------------:
-![screenshot](/imgs/receive_connection_activity_diagram.jpg) | ![screenshot](/imgs/Receive%20Connection.jpg)
+![screenshot](/imgs/receive_connection_activity_diagram.jpg) | ![screenshot](imgs/Receive%20Connection.jpg)
 
 ### Send Match
 
@@ -79,7 +79,7 @@ Trata da solicitação de uma partida para a quantidade de jogadores informada. 
 
 Diagrama de Atividades           |  Diagrama de Sequência
 :-------------------------:|:-------------------------:
-![screenshot](/imgs/send_match_activity_diagram.jpg) | ![screenshot](/imgs/Send%20Match.jpg)
+![screenshot](/imgs/send_match_activity_diagram.jpg) | ![screenshot](imgs/Send%20Match.jpg)
 
 ### Receive Match
 
@@ -89,7 +89,7 @@ Trata do recebimento de uma partida, conforme solicitada no caso de uso Request 
 
 Diagrama de Atividades           |  Diagrama de Sequência
 :-------------------------:|:-------------------------:
-![screenshot](/imgs/receive_match_activity_diagram.jpg) | ![screenshot](/imgs/Receive%20Match.jpg)
+![screenshot](/imgs/receive_match_activity_diagram.jpg) | ![screenshot](imgs/Receive%20Match.jpg)
 
 ### Send Move
 
@@ -99,7 +99,7 @@ Trata do envio de um movimento para o componente remoto do framework. Importante
 
 Diagrama de Atividades           |  Diagrama de Sequência
 :-------------------------:|:-------------------------:
-![screenshot](/imgs/send_move_activity_diagram.jpg) | ![screenshot](/imgs/Send%20Move.jpg)
+![screenshot](/imgs/send_move_activity_diagram.jpg) | ![screenshot](imgs/Send%20Move.jpg)
 
 ### Receive Move
 
@@ -109,7 +109,7 @@ Trata do recebimento de uma jogada, A mensagem recebida possui o identificador d
 
 Diagrama de Atividades           |  Diagrama de Sequência
 :-------------------------:|:-------------------------:
-![screenshot](/imgs/receive_move_activity_diagram.jpg)| ![screenshot](/imgs/Receive%20Move.jpg)
+![screenshot](/imgs/receive_move_activity_diagram.jpg)| ![screenshot](imgs/Receive%20Move.jpg)
 
 ### Send Disconnect
 
@@ -119,7 +119,7 @@ Trata da solicitação de desconexão com o componente remoto do framework. Caso
 
 Diagrama de Atividades           |  Diagrama de Sequência
 :-------------------------:|:-------------------------:
-![screenshot](/imgs/send_disconnect_activity_diagram.jpg)| ![screenshot](/imgs/Send%20Disconnect.jpg)
+![screenshot](/imgs/send_disconnect_activity_diagram.jpg)| ![screenshot](imgs/Send%20Disconnect.jpg)
 
 ### Receive Disconnect
 
@@ -129,7 +129,7 @@ Trata do recebimento de uma desconexão, seja ela solicitada (caso de uso Send D
 
 Diagrama de Atividades           |  Diagrama de Sequência
 :-------------------------:|:-------------------------:
-![screenshot](/imgs/receive_disconnect_activity_diagram.jpg)| ![screenshot](/imgs/Receive%20Disconnect.jpg)
+![screenshot](/imgs/receive_disconnect_activity_diagram.jpg)| ![screenshot](imgs/Receive%20Disconnect.jpg)
 
 ### Receive Error
 
@@ -139,6 +139,6 @@ Trata do recebimento de eventuais erros que ocorram no framework. O tratamento r
 
 Diagrama de Atividades           |  Diagrama de Sequência
 :-------------------------:|:-------------------------:
-![screenshot](/imgs/receive_error_activity_diagram.jpg)|![screenshot](/imgs/Receive%20Error.jpg)
+![screenshot](/imgs/receive_error_activity_diagram.jpg)|![screenshot](imgs/Receive%20Error.jpg)
 
 [UUID]: https://en.wikipedia.org/wiki/Universally_unique_identifier
