@@ -46,7 +46,10 @@ Iniciativa: Local
 
 Trata do registro de uma subclasse de `PyNetgamesServerListener` no componente remoto do framework, uma instância de `PyNetgamesServerProxy`. É comum que esta subclasse de `PyNetgamesServerListener` seja também a classe que implementa a interface gráfica do jogo, dessa forma permitindo a atualização visual quando por exemplo uma jogada remota é recebida.
 
-![screenshot](/imgs/add_listener_activity_diagram.jpg)
+Diagrama de Atividades           |  Diagrama de Sequência
+:-------------------------:|:-------------------------:
+![screenshot](/imgs/add_listener_activity_diagram.jpg) |  ![screenshot](imgs/Add%20Listener.jpg) 
+
 
 ### Send Connect
 
