@@ -82,7 +82,7 @@ class BaseWebsocketProxy(ABC):
                         logging.getLogger("websockets.server").addFilter(
                             lambda record: logging.getLogger().level <= logging.DEBUG)
                         await WebSocketServerBuilder().async_serve()
-                        await attempt_connection("localhost:8765")
+                        await attempt_connection("ws://localhost:8765")
                     except Exception as e:
                         return self._error(e)
                 else:
