@@ -39,8 +39,6 @@ Visando a simplificação da criação de jogos distribuídos, py-netgames-clien
 
 ![screenshot](/imgs/py_netgames_use_cases.jpg)  
 
-![screenshot](/imgs/py_netgames_interaction_overview.jpg)
-
 ### Add Listener
 
 Iniciativa: Local
