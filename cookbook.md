@@ -29,7 +29,7 @@ Visando a simplificação da criação de jogos distribuídos, py-netgames-clien
 2. `PyNetgamesServerListener`: Classe abstrata que deve ser implementada e adicionada a um `PyNetgamesServerProxy` através do método `add_listener`. Em suma, é responsável pelo recebimento de partidas, jogadas e confirmações de ações. Métodos:
     - `receive_connection_success()`: Método chamado quando uma conexão solicitada através do método `send_connect` é confirmada.
     - `receive_match(match: MatchStartedMessage)`: Método chamado quando uma partida é confirmada, após solicitação via `send_match`. O parâmetro recebido é um objeto que contém os campos `match_id`, o identificador da partida, e `position`, um inteiro que indica a vez do jogador.
-    - `receive_move(message: MoveMessage)`: Método chamado quando uma jogada é recebida, após uma partida estar em vigor (recebida via `receive_match`). O parâmetro recebido é um objeto que contém os campos `match_id`, o identificador da partida, e `position`, um inteiro que indica a vez do jogador.
+    - `receive_move(message: MoveMessage)`: Método chamado quando uma jogada é recebida, após uma partida estar em vigor (recebida via `receive_match`). O parâmetro recebido é um objeto que contém os campos `match_id`, o identificador da partida, e `payload`, o dicionário contendo a jogada remota.
     - `receive_error(error: Exception)`: Método chamado na eventualidade de um erro ocorrer na biblioteca. O tratamento recomendado é resetar o jogo para seu estado inicial.
     - `receive_disconnect`: Método chamado quando ocorre uma desconexão. O tratamento recomendado é resetar o jogo para seu estado inicial.
     - `receive_match_requested_success`: Método de sobrescrita opcional, chamado quando uma solicitação de partida realizada via `send_match` é confirmada.
@@ -55,7 +55,8 @@ Diagrama de Atividades           |  Diagrama de Sequência
 
 Iniciativa: Local
 
-Trata da conexão com o componente remoto (o servidor) do framework. Diferentes execuções de um mesmo jogo precisam estar conectadas no mesmo servidor para que seja possível a disputa de partidas. Dessa forma, é preciso atentar-se ao endereço de servidor que será informado a `PyNetgamesServerProxy`. Caso nenhum endereço seja informado, será possível a comunicação somente na mesma máquina. 
+Trata da conexão com o componente remoto (o servidor) do framework. Diferentes execuções de um mesmo jogo precisam estar conectadas no mesmo servidor para que seja possível a disputa de partidas. Dessa forma, é preciso atentar-se ao endereço de servidor que será informado a `PyNetgamesServerProxy`. Caso nenhum endereço seja informado, será possível a comunicação somente na mesma máquina. Servidor remoto disponbilizado: `"wss://py-netgames-server.fly.dev"`. Para conectar neste servidor, utilizar o parâmetro address como em:  `send_connect(address="wss://py-netgames-server.fly.dev")`.
+
 
 Diagrama de Atividades           |  Diagrama de Sequência
 :-------------------------:|:-------------------------:
@@ -85,7 +86,7 @@ Diagrama de Atividades           |  Diagrama de Sequência
 
 Iniciativa: Framework
 
-Trata do recebimento de uma partida, conforme solicitada no caso de uso Request Match. A mensagem recebida possui o identificador da partida (que deve ser utilizado para enviar movimentos no caso de uso Send Move) e a posição do jogador, que pode ser usada para controlar a vez.
+Trata do recebimento de uma partida, conforme solicitada no caso de uso Request Match. O parâmetro recebido é um objeto que contém os campos `match_id` (que deve ser utilizado para enviar movimentos no caso de uso Send Move) e `position`, um inteiro que indica a vez do jogador.
 
 Diagrama de Atividades           |  Diagrama de Sequência
 :-------------------------:|:-------------------------:
@@ -105,7 +106,7 @@ Diagrama de Atividades           |  Diagrama de Sequência
 
 Iniciativa: Framework
 
-Trata do recebimento de uma jogada, A mensagem recebida possui o identificador da partida e o dicionário enviado pelo outro jogador.
+Trata do recebimento de uma jogada,  O parâmetro recebido é um objeto que contém os campos `match_id`, o identificador da partida, e `payload`, o dicionário contendo a jogada remota.
 
 Diagrama de Atividades           |  Diagrama de Sequência
 :-------------------------:|:-------------------------:
