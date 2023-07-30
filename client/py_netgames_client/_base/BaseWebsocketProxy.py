@@ -44,10 +44,17 @@ class BaseWebsocketProxy(ABC):
         self._thread.setDaemon(True)
         self._thread.start()
 
-    def send_connect(self, address: str = "ws://localhost:8765", run_server_when_connection_refused: bool = True) -> None:
+    def send_connect(self, *, player_name: str, address: str = "ws://localhost:8765",
+                     run_server_when_connection_refused: bool = True) -> None:
 
         if not isinstance(address, str):
             return warnings.warn(self._invalid_type_message(address, "address", "send_connect", "str"), stacklevel=2)
+
+        if not isinstance(player_name, str):
+            return warnings.warn(self._invalid_type_message(address, "player_name", "send_connect", "str"), stacklevel=2)
+
+        if not len(player_name.strip()):
+            return warnings.warn("Parameter player_name in method send_connect must not be an empty string.", stacklevel=2)
 
         if not isinstance(run_server_when_connection_refused, bool):
             return warnings.warn(
@@ -61,7 +68,7 @@ class BaseWebsocketProxy(ABC):
 
             async def attempt_connection(url, attempt=0):
                 try:
-                    self._websocket = await client.connect(url)
+                    self._websocket = await client.connect(url, extra_headers={"player_name": player_name})
                 except Exception as e:
                     if isinstance(e, ConnectionResetError) and attempt < 6:
                         self._logger.debug(

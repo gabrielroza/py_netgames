@@ -88,11 +88,11 @@ class TicTacToeInterface(PyNetgamesServerListener):
     def receive_match(self, message: MatchStartedMessage):
         self._ongoing_match = True
         self.match_id = message.match_id
-        self._board = TicTacToeBoard(position=message.position)
+        self._board = TicTacToeBoard(position=message.position, player_names_by_position=message.player_names_by_position)
         self._update_screen()
 
     def receive_move(self, message: MoveMessage):
-        self._board = TicTacToeBoard.from_dict(message.payload).flip()
+        self._board = TicTacToeBoard.from_dict(message .payload).flip()
         self._update_screen()
 
     def receive_error(self, error):

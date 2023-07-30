@@ -29,9 +29,15 @@ class WebSocketServerBuilder:
         asyncio.get_event_loop().run_until_complete(stop)
 
     async def listen(self, websocket: WebSocketServerProtocol):
+        await self._assert_connection_has_required_headers(websocket)
         try:
             async for message in websocket:
                 await self._server.handle_message(self._deserializer.deserialize(message), websocket)
             await self._server.handle_disconnect(websocket)
         except ConnectionClosedError:
             await self._server.handle_disconnect(websocket)
+
+
+    async def _assert_connection_has_required_headers(self, websocket: WebSocketServerProtocol):
+        if not "player_name" in websocket.request_headers or not len(websocket.request_headers["player_name"]) > 0:
+            return await websocket.close(reason="Invalid connection, missing required 'player_name' header value.")

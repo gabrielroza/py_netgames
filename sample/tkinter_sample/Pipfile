@@ -4,7 +4,8 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-py_netgames_client="*"
+py_netgames_client = {editable = true, path = "./../../client"}
+py_netgames_model = {path = "./../../model", editable=true}
 
 [requires]
 python_version = "3"

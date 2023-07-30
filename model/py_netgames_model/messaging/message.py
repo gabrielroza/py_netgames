@@ -42,6 +42,7 @@ class MatchRequestMessage(Message):
 class MatchStartedMessage(Message):
     match_id: UUID
     position: int
+    player_names_by_position: Dict[int, str]
 
     def type(self) -> WebhookPayloadType:
         return WebhookPayloadType.MATCH_STARTED

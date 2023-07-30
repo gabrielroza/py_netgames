@@ -1,5 +1,5 @@
 import sys
-from tkinter import Tk, Menu
+from tkinter import Tk, Menu, simpledialog
 
 from py_netgames_client.tkinter_client.PyNetgamesServerProxy import PyNetgamesServerProxy
 
@@ -43,7 +43,10 @@ class ServerConnectionMenubar(Menu):
         return connect
 
     def _connect(self):
-        self._server_proxy.send_connect(address="wss://py-netgames-server.fly.dev")
+        player_name = ""
+        while len(player_name) == 0:
+            player_name = simpledialog.askstring(title="Player Name", prompt="Enter player name")
+        self._server_proxy.send_connect(player_name=player_name)
         self._connect_dropdown.entryconfig("Disconnect", state="disabled")
         self._connect_dropdown.entryconfig("Connect", state="disabled")
         self._match_dropdown.entryconfig("Request Match", state="disabled")

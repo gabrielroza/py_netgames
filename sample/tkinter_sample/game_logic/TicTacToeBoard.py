@@ -14,8 +14,10 @@ class TicTacToeBoard:
     _board: List[List[Optional[TicTacToeMark]]]
     _mark: TicTacToeMark
     _is_turn: bool
+    _name_by_mark: Dict[TicTacToeMark, str]
 
-    def __init__(self, position: int=0, board=None) -> None:
+    def __init__(self, *, player_names_by_position: Dict[int, str] = None, name_by_mark: Dict[TicTacToeMark, str] = None,
+                 position: int = 0, board=None) -> None:
         self._board = board if board else [
             [None, None, None],
             [None, None, None],
@@ -23,6 +25,10 @@ class TicTacToeBoard:
         ]
         self._is_turn = position == 0
         self._mark = TicTacToeMark.CROSS if self._is_turn else TicTacToeMark.CIRCLE
+        self._name_by_mark = name_by_mark if name_by_mark else {
+            TicTacToeMark.CROSS: player_names_by_position[0],
+            TicTacToeMark.CIRCLE: player_names_by_position[1]
+        }
         super().__init__()
 
     @classmethod
@@ -44,10 +50,7 @@ class TicTacToeBoard:
 
     def flip(self):
         self._is_turn = not self._is_turn
-        self._mark = {
-            TicTacToeMark.CROSS: TicTacToeMark.CIRCLE,
-            TicTacToeMark.CIRCLE: TicTacToeMark.CROSS
-        }[self._mark]
+        self._mark = self._mark.opposite()
         return self
 
     def _get_winner(self) -> Optional[TicTacToeMark]:
@@ -81,12 +84,12 @@ class TicTacToeBoard:
         game_over = False
         try:
             if self._get_winner():
-                message = self._get_winner() + " won"
+                message = self._name_by_mark[self._get_winner()] + " won"
                 game_over = True
             elif self._is_turn:
-                message = "Make your move"
+                message = f"{self._name_by_mark[self._mark]}: make your move"
             else:
-                message = "Awaiting opponent's move"
+                message = f"Awaiting {self._name_by_mark[self._mark.opposite()]}'s move"
         except StalemateException:
             message = "Draw"
             game_over = True
@@ -98,9 +101,9 @@ class TicTacToeBoard:
 
     @classmethod
     def from_dict(cls, attributes: Dict):
-        board = TicTacToeBoard()
+        board = TicTacToeBoard(name_by_mark=attributes["_name_by_mark"])
         board._board = attributes["_board"]
         board._is_turn = attributes["_is_turn"]
-        board._mark = attributes["_mark"]
+        board._mark = TicTacToeMark(attributes["_mark"])
         return board
 

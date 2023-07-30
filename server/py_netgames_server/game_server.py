@@ -46,8 +46,18 @@ class GameServer:
             match = dataclasses.replace(existing_match, players=frozenset([*existing_match.players, sender]))
             self._matches.add(match)
             if not match.accepting_players(message.game_id):
-                [await self._send(MatchStartedMessage(match.id, position), {websocket}) for position, websocket in
-                 enumerate(match.players)]
+                player_order = list(enumerate(match.players))
+                player_names_by_position = {
+                    index: websocket.request_headers['player_name'] for (index, websocket) in player_order
+                }
+                [await self._send(
+                    MatchStartedMessage(
+                        match_id=match.id,
+                        position=index,
+                        player_names_by_position=player_names_by_position
+                    ),
+                    {websocket}
+                ) for (index, websocket) in player_order]
         except StopIteration:
             match = Match.create(message, sender)
             self._matches.add(match)
